@@ -6,13 +6,13 @@ import java.util.Scanner;
 
 import ru.insality.Graph.type;
 
-/** Загружает файл и парсит граф в нужном представлении */
+/** Р—Р°РіСЂСѓР¶Р°РµС‚ С„Р°Р№Р» Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ РіСЂР°С„Р° РІ РЅСѓР¶РЅРѕРј РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРё */
 public class GraphParser {
 
 	public static Graph parseGraph(File file) throws FileNotFoundException {
 		Scanner sc = new Scanner(file);
 
-		// Читаем представление из файла:
+		// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ:
 		String nextLine = sc.nextLine().trim();
 		type state;
 		try {

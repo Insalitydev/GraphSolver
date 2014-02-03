@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Graph {
 
 	/**
-	 * Типы представления графа. ARR - Массив, LIST - список, INC(incidence) -
-	 * инцидентности, ADJ(adjacency) - смежности
+	 * РўРёРї РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РіСЂР°С„Р°. ARR - РјР°СЃСЃРёРІ, LIST - СЃРїРёСЃРѕРє, INC(incidence) -
+	 * РёРЅС†РёРґРµРЅС‚РЅРѕСЃС‚Рё, ADJ(adjacency) - СЃРјРµР¶РЅРѕСЃС‚Рё
 	 */
 	static enum type {
 		ARR_INC, ARR_ADJ, LIST_ADJ
@@ -18,7 +18,7 @@ public class Graph {
 	public ArrayList<ArrayList<Integer>> LIST_INC = new ArrayList<ArrayList<Integer>>();
 
 	public void printGraph(){
-		// TODO: выводит на консоль граф и информацию о нём
+		// TODO: Р’С‹РІРѕРґ РіСЂР°С„Р° Рё РµРіРѕ РёРЅС„РѕСЂРјР°С†РёРё РЅР° РєРѕРЅСЃРѕР»СЊ
 	}
 	
 	public type getState() {
