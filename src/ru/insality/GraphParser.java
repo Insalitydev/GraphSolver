@@ -12,7 +12,7 @@ public class GraphParser {
 	public static Graph parseGraph(File file) throws FileNotFoundException {
 		Scanner sc = new Scanner(file);
 
-		// ������ ������������� �� �����:
+		// Читаем первую строку: представление графа
 		String nextLine = sc.nextLine().trim();
 		type state;
 		try {

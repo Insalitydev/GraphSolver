@@ -13,13 +13,14 @@ public class Graph {
 	}
 
 	private type state;
-	public int[][] ARR_INC;
-	public int[][] ARR_ADJ;
-	public ArrayList<ArrayList<Integer>> LIST_INC = new ArrayList<ArrayList<Integer>>();
+	public int[][] arr_inc;
+	public boolean[][] arr_adj;
+	public ArrayList<ArrayList<Integer>> list_inc = new ArrayList<ArrayList<Integer>>();
 
 	public void printGraph(){
 		// TODO: Вывод графа и его информации на консоль
 	}
+	
 	
 	public type getState() {
 		return state;
