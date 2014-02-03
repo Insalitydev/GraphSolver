@@ -9,8 +9,8 @@ import ru.insality.Graph.type;
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("Hello, GraphSolver!");
-		System.out.println("Graph's presents: " + Arrays.toString(type.values()));
+		Log.print(Log.system, "Hello, GraphSolver!");
+		Log.print(Log.system, "Graph's presents: " + Arrays.toString(type.values()));
 		
 		try {
 			GraphParser.parseGraph(new File("testGraph.txt"));

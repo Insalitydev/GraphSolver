@@ -15,7 +15,7 @@ public class Graph {
 	private type state;
 	public int[][] arr_inc;
 	public boolean[][] arr_adj;
-	public ArrayList<ArrayList<Integer>> list_inc = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<ArrayList<Integer>> list_adj;
 
 	public void printGraph(){
 		// TODO: Вывод графа и его информации на консоль
