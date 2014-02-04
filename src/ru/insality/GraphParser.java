@@ -19,7 +19,8 @@ public class GraphParser {
 		try {
 			state = type.valueOf(nextLine);
 		} catch (IllegalArgumentException e) {
-			Log.print(Log.error, "Error in parsing first string: check graph's present");
+			Log.print(Log.error,
+					"Error in parsing first string: check graph's present");
 			e.printStackTrace();
 			sc.close();
 			return null;
@@ -37,7 +38,8 @@ public class GraphParser {
 			N = sc.nextInt();
 			break;
 		default:
-			Log.print(Log.error, "UNEXPECTED SWITCH IN GraphParser (N and M reading)!");
+			Log.print(Log.error,
+					"UNEXPECTED SWITCH IN GraphParser (N and M reading)!");
 			break;
 		}
 
@@ -46,9 +48,11 @@ public class GraphParser {
 		Log.print(Log.system, "Type\t\t" + state);
 		Log.print(Log.system, "Vertex Count:\t" + N);
 		Log.print(Log.system, "Edge Count:\t" + M);
+
 		int[][] arr_inc = new int[N][M];
 		boolean[][] arr_adj = new boolean[N][N];
-		ArrayList<ArrayList<Integer>> list_adj = new ArrayList<ArrayList<Integer>>();
+		@SuppressWarnings("unchecked")
+		ArrayList<Integer>[] list_adj = new ArrayList[N];
 
 		// init data:
 		for (int i = 0; i < N; i++) {
@@ -58,8 +62,12 @@ public class GraphParser {
 			for (int j = 0; j < M; j++) {
 				arr_inc[i][j] = 0;
 			}
+			list_adj[i] = new ArrayList<Integer>();
 		}
+		// skip to next line:
+		sc.nextLine();
 
+		// Parsing graph's struct data
 		switch (state) {
 		case ARR_INC:
 			for (int i = 0; i < N; i++) {
@@ -76,11 +84,33 @@ public class GraphParser {
 				}
 			}
 			break;
+		// The most difficult part...
 		case LIST_ADJ:
-			//TODO: DONT IMPLEMENTED
+			for (int i = 0; i < N; i++) {
+				String dataLine = sc.nextLine().trim();
+				Log.print(Log.debug, "Parsing string: " + dataLine);
+				// if vertex has no adj. another vertexes, continue:
+				if (dataLine.split(":").length <= 1) {
+					continue;
+				}
+				int curIndex = Integer.parseInt(dataLine.split(":")[0].trim());
+				// minus 1 because arrays [0..]
+				curIndex -= 1;
+				// Some magic: создание массива из чисел второй части строки,
+				// преобразование её в коллекцию, добавление в данные графа
+				// Array String of adj. vertexs:
+				String[] curDataStr = dataLine.split(":")[1].trim().split(" ");
+				ArrayList<Integer> curData = new ArrayList<Integer>(
+						curDataStr.length);
+				for (int j = 0; j < curDataStr.length; j++) {
+					curData.add(Integer.parseInt(curDataStr[j]));
+				}
+				list_adj[curIndex].addAll(curData);
+			}
 			break;
 		default:
-			Log.print(Log.error, "UNEXPECTED SWITCH IN GraphParser (parsing data)!");
+			Log.print(Log.error,
+					"UNEXPECTED SWITCH IN GraphParser (parsing data)!");
 			break;
 		}
 

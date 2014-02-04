@@ -1,6 +1,7 @@
 package ru.insality;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Graph {
 
@@ -13,15 +14,40 @@ public class Graph {
 	}
 
 	private type state;
+	private int N, M;
+
 	public int[][] arr_inc;
 	public boolean[][] arr_adj;
-	public ArrayList<ArrayList<Integer>> list_adj;
+	public ArrayList<Integer>[] list_adj;
 
-	public void printGraph(){
+
+	public void printGraph() {
 		// TODO: Вывод графа и его информации на консоль
+		switch (getState()) {
+		case ARR_INC:
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < M; j++) {
+					System.out.print(arr_inc[i][j] + " ");
+				}
+				System.out.println();
+			}
+			break;
+		case ARR_ADJ:
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					System.out.print(arr_inc[i][j] + " ");
+				}
+				System.out.println();
+			}
+			break;
+		case LIST_ADJ:
+			for (int i = 0; i< N; i++){
+				System.out.println((i+1) + ": " + Arrays.toString(list_adj[i].toArray()));
+			}
+			break;
+		}
 	}
-	
-	
+
 	public type getState() {
 		return state;
 	}

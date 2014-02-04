@@ -15,7 +15,7 @@ public class Main {
 		try {
 			GraphParser.parseGraph(new File("testGraph.txt"));
 		} catch (FileNotFoundException e) {
-			System.out.println("File " + e.toString() + "not found!");
+			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
 		}
 		
