@@ -50,14 +50,14 @@ public class GraphParser {
 		Log.print(Log.system, "Edge Count:\t" + M);
 
 		int[][] arr_inc = new int[N][M];
-		boolean[][] arr_adj = new boolean[N][N];
+		int[][] arr_adj = new int[N][N];
 		@SuppressWarnings("unchecked")
 		ArrayList<Integer>[] list_adj = new ArrayList[N];
 
 		// init data:
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				arr_adj[i][j] = false;
+				arr_adj[i][j] = 0;
 			}
 			for (int j = 0; j < M; j++) {
 				arr_inc[i][j] = 0;
@@ -80,7 +80,7 @@ public class GraphParser {
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
 					if (sc.nextInt() != 0)
-						arr_adj[i][j] = true;
+						arr_adj[i][j] = 1;
 				}
 			}
 			break;
@@ -115,6 +115,6 @@ public class GraphParser {
 		}
 
 		sc.close();
-		return null;
+		return new Graph(arr_inc, arr_adj, list_adj, state, N, M);
 	}
 }

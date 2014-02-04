@@ -11,12 +11,16 @@ public class Main {
 	public static void main(String[] args) {
 		Log.print(Log.system, "Hello, GraphSolver!");
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(type.values()));
-		
+		Graph graph = null;
 		try {
-			GraphParser.parseGraph(new File("testGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
+		}
+		
+		if (graph != null){
+			graph.printGraph();
 		}
 		
 	}
