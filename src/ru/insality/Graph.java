@@ -13,12 +13,12 @@ public class Graph {
 		ARR_INC, ARR_ADJ, LIST_ADJ
 	}
 
-	private States state;
-	private int N, M;
-
 	public int[][] arr_inc;
 	public int[][] arr_adj;
 	public ArrayList<Integer>[] list_adj;
+
+	private States state;
+	private int N, M;
 
 	/** Создает граф по всем параметрам. Достаются из GraphParser */
 	public Graph(int[][] arr_inc, int[][] arr_adj,
@@ -63,10 +63,6 @@ public class Graph {
 		}
 	}
 
-	public States getState() {
-		return state;
-	}
-
 	/** обнуляет (заполняет начальное состояние) для графа определенного вида */
 	private void initGraph(States state) {
 		for (int i = 0; i < N; i++) {
@@ -83,28 +79,11 @@ public class Graph {
 		}
 	}
 
-	/**
-	 * Считает кол-во ребер и записывает их в параметр M. Работает только в
-	 * режиме ARR_ADJ
-	 */
-	private void countEdges() {
-		int edges = 0;
-		if (getState() == States.ARR_ADJ) {
-			for (int i = 0; i < N; i++) {
-				for (int j = i; j < N; j++) {
-					if (arr_adj[i][j] == 1) {
-						edges++;
-					}
-				}
-			}
-		}
-		this.M = edges;
-	}
-
 	/** Convert graph to choosen state */
 	public void setState(States state) {
 		Log.print(Log.system, "Converting graph...");
 		switch (state) {
+		// ARR_ADJ -> ARR_INC
 		case ARR_INC:
 			convertToArrAdj();
 			arr_inc = new int[N][M];
@@ -122,9 +101,11 @@ public class Graph {
 			}
 			assert (curEdge <= M);
 			break;
+		// ANYTHING -> ARR_ADJ
 		case ARR_ADJ:
 			convertToArrAdj();
 			break;
+		// ARR_ADJ -> LIST_ADJ
 		case LIST_ADJ:
 			convertToArrAdj();
 			initGraph(States.LIST_ADJ);
@@ -135,13 +116,12 @@ public class Graph {
 					}
 				}
 			}
-
 			break;
 		default:
 			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
 			break;
 		}
-		
+
 		this.state = state;
 	}
 
@@ -150,6 +130,7 @@ public class Graph {
 		Log.print(Log.system, "Converting graph to ARR_ADJ");
 
 		switch (getState()) {
+		// ARR_INC -> ARR_ADJ
 		case ARR_INC:
 			initGraph(States.ARR_ADJ);
 			for (int j = 0; j < M; j++) {
@@ -170,6 +151,7 @@ public class Graph {
 				}
 			}
 			break;
+		// LIST_ADJ -> ARR_ADJ
 		case LIST_ADJ:
 			initGraph(States.ARR_ADJ);
 			for (int i = 0; i < N; i++) {
@@ -185,5 +167,23 @@ public class Graph {
 		this.state = States.ARR_ADJ;
 		// After convert have to count edges.
 		countEdges();
+	}
+
+	public States getState() {
+		return state;
+	}
+
+	/**
+	 * Считает кол-во ребер и записывает их в параметр M. Работает только в
+	 * режиме ARR_ADJ
+	 */
+	private void countEdges() {
+		int edges = 0;
+		if (getState() == States.ARR_ADJ)
+			for (int i = 0; i < N; i++)
+				for (int j = i; j < N; j++)
+					if (arr_adj[i][j] == 1)
+						edges++;
+		this.M = edges;
 	}
 }

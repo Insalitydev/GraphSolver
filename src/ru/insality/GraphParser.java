@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import ru.insality.Graph.States;
 
-/** Загружает файл и возвращает объект графа в нужном представлении */
+/** Loading file and return new Graph object from this file */
 public class GraphParser {
 
 	public static Graph parseGraph(File file) throws FileNotFoundException {
