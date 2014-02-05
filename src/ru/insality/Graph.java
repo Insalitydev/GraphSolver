@@ -2,7 +2,6 @@ package ru.insality;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class Graph {
 
@@ -10,11 +9,11 @@ public class Graph {
 	 * Тип представления графа. ARR - массив, LIST - список, INC(incidence) -
 	 * инцидентности, ADJ(adjacency) - смежности
 	 */
-	enum type {
+	enum States {
 		ARR_INC, ARR_ADJ, LIST_ADJ
 	}
 
-	private type state;
+	private States state;
 	private int N, M;
 
 	public int[][] arr_inc;
@@ -23,7 +22,7 @@ public class Graph {
 
 	/** Создает граф по всем параметрам. Достаются из GraphParser */
 	public Graph(int[][] arr_inc, int[][] arr_adj,
-			ArrayList<Integer>[] list_adj, type state, int N, int M) {
+			ArrayList<Integer>[] list_adj, States state, int N, int M) {
 		this.arr_inc = arr_inc;
 		this.arr_adj = arr_adj;
 		this.list_adj = list_adj;
@@ -64,39 +63,95 @@ public class Graph {
 		}
 	}
 
-	public type getState() {
+	public States getState() {
 		return state;
 	}
 
-	public void setState(type state) {
-		// TODO: do a graph's present switch
-		convertGraph(state);
-		this.state = state;
-	}
-
 	/** обнуляет (заполняет начальное состояние) для графа определенного вида */
-	private void initGraph(type state) {
+	private void initGraph(States state) {
 		for (int i = 0; i < N; i++) {
-			if (state == type.ARR_ADJ)
+			if (state == States.ARR_ADJ)
 				for (int j = 0; j < N; j++) {
 					arr_adj[i][j] = 0;
 				}
-			if (state == type.ARR_INC)
+			if (state == States.ARR_INC)
 				for (int j = 0; j < M; j++) {
 					arr_inc[i][j] = 0;
 				}
-			if (state == type.LIST_ADJ)
+			if (state == States.LIST_ADJ)
 				list_adj[i] = new ArrayList<Integer>();
 		}
 	}
 
-	private void convertToArrAdj() {
+	/**
+	 * Считает кол-во ребер и записывает их в параметр M. Работает только в
+	 * режиме ARR_ADJ
+	 */
+	private void countEdges() {
+		int edges = 0;
+		if (getState() == States.ARR_ADJ) {
+			for (int i = 0; i < N; i++) {
+				for (int j = i; j < N; j++) {
+					if (arr_adj[i][j] == 1) {
+						edges++;
+					}
+				}
+			}
+		}
+		this.M = edges;
+	}
 
+	/** Convert graph to choosen state */
+	public void setState(States state) {
+		Log.print(Log.system, "Converting graph...");
+		switch (state) {
+		case ARR_INC:
+			convertToArrAdj();
+			arr_inc = new int[N][M];
+			initGraph(States.ARR_INC);
+
+			int curEdge = 0;
+			for (int i = 0; i < N; i++) {
+				for (int j = i; j < N; j++) {
+					if (arr_adj[i][j] == 1) {
+						arr_inc[i][curEdge] = 1;
+						arr_inc[j][curEdge] = 1;
+						curEdge++;
+					}
+				}
+			}
+			assert (curEdge <= M);
+			break;
+		case ARR_ADJ:
+			convertToArrAdj();
+			break;
+		case LIST_ADJ:
+			convertToArrAdj();
+			initGraph(States.LIST_ADJ);
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					if (arr_adj[i][j] == 1) {
+						list_adj[i].add(j + 1);
+					}
+				}
+			}
+
+			break;
+		default:
+			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
+			break;
+		}
+		
+		this.state = state;
+	}
+
+	/** Convert graph to Adjacency array */
+	private void convertToArrAdj() {
 		Log.print(Log.system, "Converting graph to ARR_ADJ");
 
 		switch (getState()) {
 		case ARR_INC:
-			initGraph(type.ARR_ADJ);
+			initGraph(States.ARR_ADJ);
 			for (int j = 0; j < M; j++) {
 				boolean isFirstFinded = false;
 				int posFirst = 0;
@@ -116,10 +171,10 @@ public class Graph {
 			}
 			break;
 		case LIST_ADJ:
-			initGraph(type.ARR_ADJ);
+			initGraph(States.ARR_ADJ);
 			for (int i = 0; i < N; i++) {
 				for (int vertex : list_adj[i]) {
-					arr_adj[i][vertex-1] = 1;
+					arr_adj[i][vertex - 1] = 1;
 				}
 			}
 			break;
@@ -127,25 +182,8 @@ public class Graph {
 			break;
 		}
 
+		this.state = States.ARR_ADJ;
+		// After convert have to count edges.
+		countEdges();
 	}
-
-	private void convertGraph(type state) {
-		Log.print(Log.system, "Converting graph...");
-		switch (state) {
-		case ARR_INC:
-			convertToArrAdj();
-//		 TODO: convert to AI from AA
-			break;
-		case ARR_ADJ:
-			convertToArrAdj();
-			break;
-		case LIST_ADJ:
-// TODO convert to LA from AA
-			break;
-		default:
-			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
-			break;
-		}
-	}
-
 }

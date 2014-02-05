@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import ru.insality.Graph.type;
+import ru.insality.Graph.States;
 
 /** Загружает файл и возвращает объект графа в нужном представлении */
 public class GraphParser {
@@ -15,9 +15,9 @@ public class GraphParser {
 
 		// parsing type of present
 		String nextLine = sc.nextLine().trim();
-		type state;
+		States state;
 		try {
-			state = type.valueOf(nextLine);
+			state = States.valueOf(nextLine);
 		} catch (IllegalArgumentException e) {
 			Log.print(Log.error,
 					"Error in parsing first string: check graph's present");
