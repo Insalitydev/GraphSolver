@@ -42,7 +42,7 @@ public class GraphParser {
 					"UNEXPECTED SWITCH IN GraphParser (N and M reading)!");
 			break;
 		}
-
+		
 		// Parsing the graph's data
 		Log.print(Log.system, "Start parsing graph's data");
 		Log.print(Log.system, "Type\t\t" + state);
@@ -63,7 +63,7 @@ public class GraphParser {
 				arr_inc[i][j] = 0;
 			}
 			list_adj[i] = new ArrayList<Integer>();
-		}
+		} 
 		// skip to next line:
 		sc.nextLine();
 

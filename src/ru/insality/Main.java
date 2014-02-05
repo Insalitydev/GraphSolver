@@ -21,6 +21,8 @@ public class Main {
 		
 		if (graph != null){
 			graph.printGraph();
+			graph.setState(type.ARR_ADJ);
+			graph.printGraph();
 		}
 		
 	}
