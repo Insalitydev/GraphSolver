@@ -176,7 +176,6 @@ public class Graph {
 			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
 			break;
 		}
-
 		this.state = state;
 	}
 
