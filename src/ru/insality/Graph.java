@@ -36,54 +36,50 @@ public class Graph {
 		this.isVisited = new boolean[N];
 	}
 
-	/** BFS */
+	/** Breadth-first search algorithm */
 	public void bfs(int from) {
-		Log.print(Log.system, "Start the BFS algorythm");
+		Log.print(Log.system, "Start the BFS algorythm, starting from: " + from);
 		clearNodes();
-		
+
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(from);
-		System.out.println(from);
+		System.out.print(from +" ");
 		isVisited[from] = true;
-
 		while (!queue.isEmpty()) {
 			int node = queue.remove();
 			int child = -1;
 			while ((child = getUnvisitedChildNode(node)) != -1) {
 				isVisited[child] = true;
-				System.out.println(child);
+				System.out.print(child + " ");
 				queue.add(child);
 			}
 		}
+		System.out.println();
 		clearNodes();
 	}
 
+	/** Deep-first search algorithm */
 	public void dfs(int from) {
-		Log.print(Log.system, "Start the DFS algorythm");
+		Log.print(Log.system, "Start the DFS algorythm, starting from: " + from);
 		clearNodes();
 
 		Stack<Integer> stack = new Stack<Integer>();
 		stack.push(from);
+		System.out.print(from +" ");
 		isVisited[from] = true;
-		System.out.println(from);
 		while (!stack.isEmpty()) {
 			int node = stack.peek();
 			int child = getUnvisitedChildNode(node);
 			if (child != -1) {
 				isVisited[child] = true;
-				System.out.println(child);
+				System.out.print(child + " ");
 				stack.push(child);
 			} else {
 				stack.pop();
 			}
 		}
-		// Clear visited property of nodes
+		System.out.println();
 		clearNodes();
-	}
-
-	/** Clear the isVisited array to false */
-	private void clearNodes() {
-		Arrays.fill(isVisited, false);
 	}
 
 	/**
@@ -141,7 +137,7 @@ public class Graph {
 		}
 	}
 
-	/** Convert graph to choosen state */
+	/** Convert graph to chosen state */
 	public void setState(States state) {
 		Log.print(Log.system, "Converting graph...");
 		switch (state) {
@@ -274,6 +270,11 @@ public class Graph {
 			if (isVisited[i])
 				System.out.print((i + 1) + ", ");
 		System.out.println();
+	}
+	
+	/** Clear the isVisited array to false */
+	private void clearNodes() {
+		Arrays.fill(isVisited, false);
 	}
 
 	/**

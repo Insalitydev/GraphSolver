@@ -36,7 +36,9 @@ public class Main {
 			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
 			graph.bfs(0);
+			graph.bfs(4);
 			graph.dfs(0);
+			graph.dfs(4);
 			
 		}
 		
