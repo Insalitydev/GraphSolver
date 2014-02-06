@@ -43,7 +43,7 @@ public class Graph {
 
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(from);
-		System.out.print(from +" ");
+		System.out.print(from + " ");
 		isVisited[from] = true;
 		while (!queue.isEmpty()) {
 			int node = queue.remove();
@@ -65,7 +65,7 @@ public class Graph {
 
 		Stack<Integer> stack = new Stack<Integer>();
 		stack.push(from);
-		System.out.print(from +" ");
+		System.out.print(from + " ");
 		isVisited[from] = true;
 		while (!stack.isEmpty()) {
 			int node = stack.peek();
@@ -97,17 +97,14 @@ public class Graph {
 				}
 			break;
 		case ARR_INC:
-			for (int i = 0; i < M; i++) {
-				if (arr_inc[node][i] != 0) {
-					// Finding inc. vertex to our node
-					for (int j = 0; j < N; j++) {
+			for (int i = 0; i < M; i++)
+				if (arr_inc[node][i] != 0)
+					// Finding incid. vertex to our node
+					for (int j = 0; j < N; j++)
 						if (arr_inc[j][i] != 0 && j != node) {
 							result = j;
 							break;
 						}
-					}
-				}
-			}
 			break;
 		case LIST_ADJ:
 			for (int curNode : list_adj[node])
@@ -271,7 +268,7 @@ public class Graph {
 				System.out.print((i + 1) + ", ");
 		System.out.println();
 	}
-	
+
 	/** Clear the isVisited array to false */
 	private void clearNodes() {
 		Arrays.fill(isVisited, false);
