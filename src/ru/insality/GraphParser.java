@@ -15,7 +15,7 @@ public class GraphParser {
 
 		// parsing type of present
 		String nextLine = sc.nextLine().trim();
-		States state;
+		States state = null;
 		try {
 			state = States.valueOf(nextLine);
 		} catch (IllegalArgumentException e) {
@@ -42,7 +42,7 @@ public class GraphParser {
 					"UNEXPECTED SWITCH IN GraphParser (N and M reading)!");
 			break;
 		}
-		
+
 		// Parsing the graph's data
 		Log.print(Log.system, "Start parsing graph's data");
 		Log.print(Log.system, "Type\t\t" + state);
@@ -54,7 +54,7 @@ public class GraphParser {
 		@SuppressWarnings("unchecked")
 		ArrayList<Integer>[] list_adj = new ArrayList[N];
 
-		// init data:
+		// clear data:
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				arr_adj[i][j] = 0;
@@ -63,26 +63,21 @@ public class GraphParser {
 				arr_inc[i][j] = 0;
 			}
 			list_adj[i] = new ArrayList<Integer>();
-		} 
+		}
 		// skip to next line:
 		sc.nextLine();
 
 		// Parsing graph's struct data
 		switch (state) {
 		case ARR_INC:
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < M; j++) {
+			for (int i = 0; i < N; i++) 
+				for (int j = 0; j < M; j++) 
 					arr_inc[i][j] = sc.nextInt();
-				}
-			}
 			break;
 		case ARR_ADJ:
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-//					if (sc.nextInt() != 0)
-						arr_adj[i][j] = sc.nextInt();
-				}
-			}
+			for (int i = 0; i < N; i++) 
+				for (int j = 0; j < N; j++) 
+					arr_adj[i][j] = sc.nextInt();
 			break;
 		// The most difficult part...
 		case LIST_ADJ:
