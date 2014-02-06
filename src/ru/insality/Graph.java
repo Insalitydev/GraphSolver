@@ -92,9 +92,9 @@ public class Graph {
 			int curEdge = 0;
 			for (int i = 0; i < N; i++) {
 				for (int j = i; j < N; j++) {
-					if (arr_adj[i][j] == 1) {
-						arr_inc[i][curEdge] = 1;
-						arr_inc[j][curEdge] = 1;
+					if (arr_adj[i][j] != 0) {
+						arr_inc[i][curEdge] = arr_adj[i][j];
+						arr_inc[j][curEdge] = arr_adj[i][j];
 						curEdge++;
 					}
 				}
@@ -138,13 +138,13 @@ public class Graph {
 				int posFirst = 0;
 
 				for (int i = 0; i < N; i++) {
-					if (arr_inc[i][j] == 1) {
+					if (arr_inc[i][j] != 0) {
 						if (!isFirstFinded) {
 							isFirstFinded = true;
 							posFirst = i;
 						} else {
-							arr_adj[posFirst][i] = 1;
-							arr_adj[i][posFirst] = 1;
+							arr_adj[posFirst][i] = arr_inc[i][j];
+							arr_adj[i][posFirst] = arr_inc[i][j];
 							isFirstFinded = false;
 						}
 					}
@@ -182,7 +182,7 @@ public class Graph {
 		if (getState() == States.ARR_ADJ)
 			for (int i = 0; i < N; i++)
 				for (int j = i; j < N; j++)
-					if (arr_adj[i][j] == 1)
+					if (arr_adj[i][j] != 0)
 						edges++;
 		this.M = edges;
 	}

@@ -25,7 +25,7 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.ARR_INC);
 			graph.printGraph();
-			graph.setState(States.LIST_ADJ);
+			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
 		}
 		

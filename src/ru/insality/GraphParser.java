@@ -79,8 +79,8 @@ public class GraphParser {
 		case ARR_ADJ:
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
-					if (sc.nextInt() != 0)
-						arr_adj[i][j] = 1;
+//					if (sc.nextInt() != 0)
+						arr_adj[i][j] = sc.nextInt();
 				}
 			}
 			break;
