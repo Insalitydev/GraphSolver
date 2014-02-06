@@ -6,14 +6,18 @@ import java.util.Arrays;
 
 import ru.insality.Graph.States;
 
-
+/**
+ * GraphSolver - Программа для работы с графами.
+ * Возможно представлять графы в нескольких представлениях, а также переключаться между ними
+ * Присутствует ряд алгоритмов для работы нам графом 
+ * */
 public class Main {
 	public static void main(String[] args) {
 		Log.print(Log.system, "Hello, GraphSolver!");
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
 		Graph graph = null;
 		try {
-			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("treeGraph.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
@@ -27,6 +31,13 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
+			graph.setState(States.LIST_ADJ);
+			graph.printGraph();
+			graph.setState(States.ARR_ADJ);
+			graph.printGraph();
+			graph.bfs(0);
+			graph.dfs(0);
+			
 		}
 		
 	}

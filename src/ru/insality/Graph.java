@@ -2,6 +2,9 @@ package ru.insality;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class Graph {
 
@@ -16,6 +19,7 @@ public class Graph {
 	public int[][] arr_inc;
 	public int[][] arr_adj;
 	public ArrayList<Integer>[] list_adj;
+	boolean[] isVisited;
 
 	private States state;
 	private int N, M;
@@ -29,10 +33,210 @@ public class Graph {
 		this.state = state;
 		this.N = N;
 		this.M = M;
+		this.isVisited = new boolean[N];
 	}
 
+	/** BFS */
+	public void bfs(int from) {
+		Log.print(Log.system, "Start the BFS algorythm");
+		clearNodes();
+		
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.add(from);
+		System.out.println(from);
+		isVisited[from] = true;
+
+		while (!queue.isEmpty()) {
+			int node = queue.remove();
+			int child = -1;
+			while ((child = getUnvisitedChildNode(node)) != -1) {
+				isVisited[child] = true;
+				System.out.println(child);
+				queue.add(child);
+			}
+		}
+		clearNodes();
+	}
+
+	public void dfs(int from) {
+		Log.print(Log.system, "Start the DFS algorythm");
+		clearNodes();
+
+		Stack<Integer> stack = new Stack<Integer>();
+		stack.push(from);
+		isVisited[from] = true;
+		System.out.println(from);
+		while (!stack.isEmpty()) {
+			int node = stack.peek();
+			int child = getUnvisitedChildNode(node);
+			if (child != -1) {
+				isVisited[child] = true;
+				System.out.println(child);
+				stack.push(child);
+			} else {
+				stack.pop();
+			}
+		}
+		// Clear visited property of nodes
+		clearNodes();
+	}
+
+	/** Clear the isVisited array to false */
+	private void clearNodes() {
+		Arrays.fill(isVisited, false);
+	}
+
+	/**
+	 * @return first unvisited (from isVisited[]) vertex child from vertex node.
+	 *         If have not vertex: return -1
+	 */
+	private int getUnvisitedChildNode(int node) {
+		int result = -1;
+		switch (getState()) {
+		case ARR_ADJ:
+			for (int i = 0; i < N; i++)
+				if (arr_adj[node][i] != 0 && !isVisited[i]) {
+					result = i;
+					break;
+				}
+			break;
+		case ARR_INC:
+			for (int i = 0; i < M; i++) {
+				if (arr_inc[node][i] != 0) {
+					// Finding inc. vertex to our node
+					for (int j = 0; j < N; j++) {
+						if (arr_inc[j][i] != 0 && j != node) {
+							result = j;
+							break;
+						}
+					}
+				}
+			}
+			break;
+		case LIST_ADJ:
+			for (int curNode : list_adj[node])
+				if (!isVisited[curNode]) {
+					result = curNode;
+					break;
+				}
+			break;
+		default:
+			Log.print(Log.error, "Error in switch, unexpected graph State");
+			break;
+		}
+
+		return result;
+
+	}
+
+	/** обнуляет (заполняет начальное состояние) для графа определенного вида */
+	private void clearGraph(States state) {
+		for (int i = 0; i < N; i++) {
+			if (state == States.ARR_ADJ)
+				Arrays.fill(arr_adj[i], 0);
+			if (state == States.ARR_INC)
+				Arrays.fill(arr_inc[i], 0);
+			if (state == States.LIST_ADJ)
+				list_adj[i] = new ArrayList<Integer>();
+		}
+	}
+
+	/** Convert graph to choosen state */
+	public void setState(States state) {
+		Log.print(Log.system, "Converting graph...");
+		switch (state) {
+		// ARR_ADJ -> ARR_INC
+		case ARR_INC:
+			convertToArrAdj();
+			arr_inc = new int[N][M];
+			clearGraph(States.ARR_INC);
+
+			int curEdge = 0;
+			for (int i = 0; i < N; i++) {
+				for (int j = i; j < N; j++) {
+					if (arr_adj[i][j] != 0) {
+						arr_inc[i][curEdge] = arr_adj[i][j];
+						arr_inc[j][curEdge] = arr_adj[i][j];
+						curEdge++;
+					}
+				}
+			}
+			assert (curEdge <= M);
+			break;
+		// ANYTHING -> ARR_ADJ
+		case ARR_ADJ:
+			convertToArrAdj();
+			break;
+		// ARR_ADJ -> LIST_ADJ
+		case LIST_ADJ:
+			convertToArrAdj();
+			clearGraph(States.LIST_ADJ);
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					if (arr_adj[i][j] != 0) {
+						list_adj[i].add(j + 1);
+					}
+				}
+			}
+			break;
+		default:
+			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
+			break;
+		}
+
+		this.state = state;
+	}
+
+	/** Convert graph to Adjacency array */
+	private void convertToArrAdj() {
+		Log.print(Log.system, "Converting graph to ARR_ADJ");
+
+		switch (getState()) {
+		// ARR_INC -> ARR_ADJ
+		case ARR_INC:
+			clearGraph(States.ARR_ADJ);
+			for (int j = 0; j < M; j++) {
+				boolean isFirstFinded = false;
+				int posFirst = 0;
+
+				for (int i = 0; i < N; i++) {
+					if (arr_inc[i][j] != 0) {
+						if (!isFirstFinded) {
+							isFirstFinded = true;
+							posFirst = i;
+						} else {
+							arr_adj[posFirst][i] = arr_inc[i][j];
+							arr_adj[i][posFirst] = arr_inc[i][j];
+							isFirstFinded = false;
+						}
+					}
+				}
+			}
+			break;
+		// LIST_ADJ -> ARR_ADJ
+		case LIST_ADJ:
+			clearGraph(States.ARR_ADJ);
+			for (int i = 0; i < N; i++) {
+				for (int vertex : list_adj[i]) {
+					arr_adj[i][vertex - 1] = 1;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+
+		this.state = States.ARR_ADJ;
+		// After convert have to count edges.
+		countEdges();
+	}
+
+	public States getState() {
+		return state;
+	}
+
+	/** Выводит информацию о графе и сам граф на консоль */
 	public void printGraph() {
-		// TODO: Вывод графа и его информации на консоль
 		Log.print(Log.system, "Printing graph's data");
 		Log.print(Log.system, "Type\t\t" + state);
 		Log.print(Log.system, "Vertex Count:\t" + N);
@@ -63,114 +267,13 @@ public class Graph {
 		}
 	}
 
-	/** обнуляет (заполняет начальное состояние) для графа определенного вида */
-	private void initGraph(States state) {
-		for (int i = 0; i < N; i++) {
-			if (state == States.ARR_ADJ)
-				for (int j = 0; j < N; j++) {
-					arr_adj[i][j] = 0;
-				}
-			if (state == States.ARR_INC)
-				for (int j = 0; j < M; j++) {
-					arr_inc[i][j] = 0;
-				}
-			if (state == States.LIST_ADJ)
-				list_adj[i] = new ArrayList<Integer>();
-		}
-	}
-
-	/** Convert graph to choosen state */
-	public void setState(States state) {
-		Log.print(Log.system, "Converting graph...");
-		switch (state) {
-		// ARR_ADJ -> ARR_INC
-		case ARR_INC:
-			convertToArrAdj();
-			arr_inc = new int[N][M];
-			initGraph(States.ARR_INC);
-
-			int curEdge = 0;
-			for (int i = 0; i < N; i++) {
-				for (int j = i; j < N; j++) {
-					if (arr_adj[i][j] != 0) {
-						arr_inc[i][curEdge] = arr_adj[i][j];
-						arr_inc[j][curEdge] = arr_adj[i][j];
-						curEdge++;
-					}
-				}
-			}
-			assert (curEdge <= M);
-			break;
-		// ANYTHING -> ARR_ADJ
-		case ARR_ADJ:
-			convertToArrAdj();
-			break;
-		// ARR_ADJ -> LIST_ADJ
-		case LIST_ADJ:
-			convertToArrAdj();
-			initGraph(States.LIST_ADJ);
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					if (arr_adj[i][j] == 1) {
-						list_adj[i].add(j + 1);
-					}
-				}
-			}
-			break;
-		default:
-			Log.print(Log.error, "Unexpected switch in convertGraph(Graph)");
-			break;
-		}
-
-		this.state = state;
-	}
-
-	/** Convert graph to Adjacency array */
-	private void convertToArrAdj() {
-		Log.print(Log.system, "Converting graph to ARR_ADJ");
-
-		switch (getState()) {
-		// ARR_INC -> ARR_ADJ
-		case ARR_INC:
-			initGraph(States.ARR_ADJ);
-			for (int j = 0; j < M; j++) {
-				boolean isFirstFinded = false;
-				int posFirst = 0;
-
-				for (int i = 0; i < N; i++) {
-					if (arr_inc[i][j] != 0) {
-						if (!isFirstFinded) {
-							isFirstFinded = true;
-							posFirst = i;
-						} else {
-							arr_adj[posFirst][i] = arr_inc[i][j];
-							arr_adj[i][posFirst] = arr_inc[i][j];
-							isFirstFinded = false;
-						}
-					}
-				}
-			}
-			break;
-		// LIST_ADJ -> ARR_ADJ
-		case LIST_ADJ:
-			initGraph(States.ARR_ADJ);
-			for (int i = 0; i < N; i++) {
-				for (int vertex : list_adj[i]) {
-					arr_adj[i][vertex - 1] = 1;
-				}
-			}
-			break;
-		default:
-			break;
-		}
-
-		this.state = States.ARR_ADJ;
-		// After convert have to count edges.
-		countEdges();
-	}
-
-	public States getState() {
-		return state;
+	/** Выводит списки посещенных вершин */
+	public void printVisited() {
+		Log.print(Log.system, "Printing visited vertexes");
+		for (int i = 0; i < N; i++)
+			if (isVisited[i])
+				System.out.print((i + 1) + ", ");
+		System.out.println();
 	}
 
 	/**
