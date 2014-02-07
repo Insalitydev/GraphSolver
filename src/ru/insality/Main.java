@@ -33,10 +33,10 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
-			graph.bfs(0);
-			graph.bfs(4);
-			graph.dfs(0);
-			graph.dfs(4);
+			graph.setState(States.ARR_INC);
+			graph.printGraph();
+			graph.setState(States.LIST_ADJ);
+			graph.printGraph();
 			
 		}
 		

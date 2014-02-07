@@ -18,7 +18,7 @@ public class Graph {
 
 	public int[][] arr_inc;
 	public int[][] arr_adj;
-	public ArrayList<Integer>[] list_adj;
+	public ArrayList<ListNode>[] list_adj;
 	boolean[] isVisited;
 
 	private States state;
@@ -26,7 +26,7 @@ public class Graph {
 
 	/** Создает граф по всем параметрам. Достаются из GraphParser */
 	public Graph(int[][] arr_inc, int[][] arr_adj,
-			ArrayList<Integer>[] list_adj, States state, int N, int M) {
+			ArrayList<ListNode>[] list_adj, States state, int N, int M) {
 		this.arr_inc = arr_inc;
 		this.arr_adj = arr_adj;
 		this.list_adj = list_adj;
@@ -107,9 +107,9 @@ public class Graph {
 						}
 			break;
 		case LIST_ADJ:
-			for (int curNode : list_adj[node])
-				if (!isVisited[curNode]) {
-					result = curNode;
+			for (ListNode curNode : list_adj[node])
+				if (!isVisited[curNode.data]) {
+					result = curNode.data;
 					break;
 				}
 			break;
@@ -130,7 +130,7 @@ public class Graph {
 			if (state == States.ARR_INC)
 				Arrays.fill(arr_inc[i], 0);
 			if (state == States.LIST_ADJ)
-				list_adj[i] = new ArrayList<Integer>();
+				list_adj[i] = new ArrayList<ListNode>();
 		}
 	}
 
@@ -167,7 +167,7 @@ public class Graph {
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
 					if (arr_adj[i][j] != 0) {
-						list_adj[i].add(j + 1);
+						list_adj[i].add(new ListNode(j + 1));
 					}
 				}
 			}
@@ -209,8 +209,8 @@ public class Graph {
 		case LIST_ADJ:
 			clearGraph(States.ARR_ADJ);
 			for (int i = 0; i < N; i++) {
-				for (int vertex : list_adj[i]) {
-					arr_adj[i][vertex - 1] = 1;
+				for (ListNode vertex : list_adj[i]) {
+					arr_adj[i][vertex.data - 1] = 1;
 				}
 			}
 			break;
@@ -252,8 +252,10 @@ public class Graph {
 			break;
 		case LIST_ADJ:
 			for (int i = 0; i < N; i++) {
-				System.out.println((i + 1) + ": "
-						+ Arrays.toString(list_adj[i].toArray()));
+				System.out.print((i + 1) + ": ");
+				for (ListNode vertex: list_adj[i])
+					System.out.print(vertex.data + " ");
+				System.out.println();
 			}
 			break;
 		}

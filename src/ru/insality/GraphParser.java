@@ -52,7 +52,7 @@ public class GraphParser {
 		int[][] arr_inc = new int[N][M];
 		int[][] arr_adj = new int[N][N];
 		@SuppressWarnings("unchecked")
-		ArrayList<Integer>[] list_adj = new ArrayList[N];
+		ArrayList<ListNode>[] list_adj = new ArrayList[N];
 
 		// clear data:
 		for (int i = 0; i < N; i++) {
@@ -62,7 +62,7 @@ public class GraphParser {
 			for (int j = 0; j < M; j++) {
 				arr_inc[i][j] = 0;
 			}
-			list_adj[i] = new ArrayList<Integer>();
+			list_adj[i] = new ArrayList<ListNode>();
 		}
 		// skip to next line:
 		sc.nextLine();
@@ -95,10 +95,10 @@ public class GraphParser {
 				// преобразование её в коллекцию, добавление в данные графа
 				// Array String of adj. vertexs:
 				String[] curDataStr = dataLine.split(":")[1].trim().split(" ");
-				ArrayList<Integer> curData = new ArrayList<Integer>(
+				ArrayList<ListNode> curData = new ArrayList<ListNode>(
 						curDataStr.length);
 				for (int j = 0; j < curDataStr.length; j++) {
-					curData.add(Integer.parseInt(curDataStr[j]));
+					curData.add(new ListNode(Integer.parseInt(curDataStr[j])));
 				}
 				list_adj[curIndex].addAll(curData);
 			}
