@@ -70,13 +70,13 @@ public class GraphParser {
 		// Parsing graph's struct data
 		switch (state) {
 		case ARR_INC:
-			for (int i = 0; i < N; i++) 
-				for (int j = 0; j < M; j++) 
+			for (int i = 0; i < N; i++)
+				for (int j = 0; j < M; j++)
 					arr_inc[i][j] = sc.nextInt();
 			break;
 		case ARR_ADJ:
-			for (int i = 0; i < N; i++) 
-				for (int j = 0; j < N; j++) 
+			for (int i = 0; i < N; i++)
+				for (int j = 0; j < N; j++)
 					arr_adj[i][j] = sc.nextInt();
 			break;
 		// The most difficult part...
@@ -98,7 +98,16 @@ public class GraphParser {
 				ArrayList<ListNode> curData = new ArrayList<ListNode>(
 						curDataStr.length);
 				for (int j = 0; j < curDataStr.length; j++) {
-					curData.add(new ListNode(Integer.parseInt(curDataStr[j])));
+					// If number format: xx-yy, yy is a weight. Else weight = 1;
+					if (curDataStr[j].contains("-")) {
+						int curVertexWeight = Integer.parseInt(curDataStr[j]
+								.split("-")[1]);
+						int curVertexData = Integer.parseInt(curDataStr[j]
+								.split("-")[0]);
+						curData.add(new ListNode(curVertexData, curVertexWeight));
+					} else
+						curData.add(new ListNode(Integer
+								.parseInt(curDataStr[j])));
 				}
 				list_adj[curIndex].addAll(curData);
 			}

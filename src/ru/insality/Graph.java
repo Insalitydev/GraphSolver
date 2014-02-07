@@ -108,8 +108,8 @@ public class Graph {
 			break;
 		case LIST_ADJ:
 			for (ListNode curNode : list_adj[node])
-				if (!isVisited[curNode.data]) {
-					result = curNode.data;
+				if (!isVisited[curNode.data - 1]) {
+					result = curNode.data - 1;
 					break;
 				}
 			break;
@@ -136,7 +136,7 @@ public class Graph {
 
 	/** Convert graph to chosen state */
 	public void setState(States state) {
-		Log.print(Log.system, "Converting graph...");
+		Log.print(Log.system, "Converting graph to " + state);
 		switch (state) {
 		// ARR_ADJ -> ARR_INC
 		case ARR_INC:
@@ -167,7 +167,7 @@ public class Graph {
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
 					if (arr_adj[i][j] != 0) {
-						list_adj[i].add(new ListNode(j + 1));
+						list_adj[i].add(new ListNode(j + 1, arr_adj[i][j]));
 					}
 				}
 			}
@@ -181,7 +181,7 @@ public class Graph {
 
 	/** Convert graph to Adjacency array */
 	private void convertToArrAdj() {
-		Log.print(Log.system, "Converting graph to ARR_ADJ");
+		// Log.print(Log.system, "Converting graph to ARR_ADJ");
 
 		switch (getState()) {
 		// ARR_INC -> ARR_ADJ
@@ -210,7 +210,7 @@ public class Graph {
 			clearGraph(States.ARR_ADJ);
 			for (int i = 0; i < N; i++) {
 				for (ListNode vertex : list_adj[i]) {
-					arr_adj[i][vertex.data - 1] = 1;
+					arr_adj[i][vertex.data - 1] = vertex.weight;
 				}
 			}
 			break;
@@ -252,10 +252,14 @@ public class Graph {
 			break;
 		case LIST_ADJ:
 			for (int i = 0; i < N; i++) {
-				System.out.print((i + 1) + ": ");
-				for (ListNode vertex: list_adj[i])
-					System.out.print(vertex.data + " ");
-				System.out.println();
+				System.out.print((i + 1) + ": [ ");
+				for (ListNode vertex : list_adj[i]) {
+					System.out.print(vertex.data);
+					if (Main.isShowWeight)
+						System.out.print("-" + vertex.weight);
+					System.out.print(" ");
+				}
+				System.out.println("]");
 			}
 			break;
 		}

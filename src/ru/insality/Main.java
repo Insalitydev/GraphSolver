@@ -12,6 +12,9 @@ import ru.insality.Graph.States;
  * Присутствует ряд алгоритмов для работы нам графом 
  * */
 public class Main {
+	
+	public static boolean isShowWeight = false;
+	
 	public static void main(String[] args) {
 		Log.print(Log.system, "Hello, GraphSolver!");
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
@@ -37,6 +40,8 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.LIST_ADJ);
 			graph.printGraph();
+			graph.bfs(0);
+			graph.dfs(0);
 			
 		}
 		
