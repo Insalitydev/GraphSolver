@@ -100,11 +100,11 @@ public class GraphParser {
 				for (int j = 0; j < curDataStr.length; j++) {
 					// If number format: xx-yy, yy is a weight. Else weight = 1;
 					if (curDataStr[j].contains("-")) {
-						int curVertexWeight = Integer.parseInt(curDataStr[j]
-								.split("-")[1]);
-						int curVertexData = Integer.parseInt(curDataStr[j]
+						int curNodeData = Integer.parseInt(curDataStr[j]
 								.split("-")[0]);
-						curData.add(new ListNode(curVertexData, curVertexWeight));
+						int curNodeWeight = Integer.parseInt(curDataStr[j]
+								.split("-")[1]);
+						curData.add(new ListNode(curNodeData, curNodeWeight));
 					} else
 						curData.add(new ListNode(Integer
 								.parseInt(curDataStr[j])));
