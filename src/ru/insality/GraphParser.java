@@ -3,6 +3,7 @@ package ru.insality;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import ru.insality.Graph.States;
@@ -56,12 +57,8 @@ public class GraphParser {
 
 		// clear data:
 		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				arr_adj[i][j] = 0;
-			}
-			for (int j = 0; j < M; j++) {
-				arr_inc[i][j] = 0;
-			}
+			Arrays.fill(arr_adj[i], 0);
+			Arrays.fill(arr_inc[i], 0);
 			list_adj[i] = new ArrayList<ListNode>();
 		}
 		// skip to next line:

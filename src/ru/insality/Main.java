@@ -20,7 +20,7 @@ public class Main {
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
 		Graph graph = null;
 		try {
-			 graph = GraphParser.parseGraph(new File("treeGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
