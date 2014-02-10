@@ -13,14 +13,14 @@ import ru.insality.Graph.States;
  * */
 public class Main {
 	
-	public static boolean isShowWeight = false;
+	public static boolean isShowWeight = true;
 	
 	public static void main(String[] args) {
 		Log.print(Log.system, "Hello, GraphSolver!");
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
 		Graph graph = null;
 		try {
-			 graph = GraphParser.parseGraph(new File("treeGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
@@ -28,17 +28,18 @@ public class Main {
 		
 		if (graph != null){
 			graph.printGraph();
-			graph.setState(States.ARR_INC);
-			graph.printGraph();
-			graph.setState(States.ARR_ADJ);
-			graph.printGraph();
 			graph.setState(States.LIST_ADJ);
+			graph.printGraph();
+			graph.setState(States.ARR_ADJ);
+			graph.printGraph();
+			System.out.println(graph.isAdjacency(0, 1));
+			System.out.println(graph.isAdjacency(1, 0));
+			System.out.println(graph.isAdjacency(1, 3));
+			System.out.println(graph.isAdjacency(3, 1));
+			System.out.println(graph.isAdjacency(2, 1));
 			graph.bfs(0);
 			graph.dfs(0);
 			graph.setState(States.ARR_ADJ);
-			graph.bfs(0);
-			graph.dfs(0);
-			graph.setState(States.ARR_INC);
 			graph.bfs(0);
 			graph.dfs(0);
 		}
