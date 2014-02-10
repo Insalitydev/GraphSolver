@@ -82,6 +82,61 @@ public class Graph {
 		clearNodes();
 	}
 
+	/** return true, if node1 and node2 is adjacency */
+	public boolean isAdjacency(int node1, int node2) {
+		assert(node1 < N);
+		assert(node2 < N);
+		
+		switch (getState()) {
+		case ARR_ADJ:
+			if (arr_adj[node1][node2] != 0) {
+				return true;
+			}
+			break;
+		case ARR_INC:
+			for (int i = 0; i < M; i++)
+				if (arr_inc[node1][i] != 0)
+					// Finding incid. vertex to our node
+					for (int j = 0; j < N; j++)
+						if (arr_inc[j][i] != 0 && j == node2) {
+							return true;
+						}
+			break;
+		case LIST_ADJ:
+			for (ListNode node: list_adj[node1]){
+				if (node.data == node2)
+					return true;
+			}
+			break;
+		}
+
+		return false;
+	}
+
+	/** Return degree (count of adj. nodes) of some node */
+	public int getDegree(int node) {
+		assert(node < N);
+		
+		int result = 0;
+		switch (getState()) {
+		case ARR_ADJ:
+			for (int i = 0; i < N; i++){
+				if (arr_adj[node][i] != 0) 
+					result++;
+			}
+			break;
+		case ARR_INC:
+			for (int i = 0; i < M; i++)
+				if (arr_inc[node][i] > 0)
+					result++;
+			break;
+		case LIST_ADJ:
+			result = list_adj[node].size();
+			break;
+		}
+		return result;
+	}
+
 	/**
 	 * @return first unvisited (from isVisited[]) vertex child from vertex node.
 	 *         If have not vertex: return -1
@@ -92,8 +147,7 @@ public class Graph {
 		case ARR_ADJ:
 			for (int i = 0; i < N; i++)
 				if (arr_adj[node][i] != 0 && !isVisited[i]) {
-					result = i;
-					break;
+					return i;
 				}
 			break;
 		case ARR_INC:
@@ -101,16 +155,14 @@ public class Graph {
 				if (arr_inc[node][i] != 0)
 					// Finding incid. vertex to our node
 					for (int j = 0; j < N; j++)
-						if (arr_inc[j][i] != 0 && j != node) {
-							result = j;
-							break;
+						if (arr_inc[j][i] != 0 && !isVisited[j] && j != node) {
+							return j;
 						}
 			break;
 		case LIST_ADJ:
 			for (ListNode curNode : list_adj[node])
-				if (!isVisited[curNode.data - 1]) {
-					result = curNode.data - 1;
-					break;
+				if (!isVisited[curNode.data]) {
+					return curNode.data;
 				}
 			break;
 		default:
@@ -167,7 +219,7 @@ public class Graph {
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
 					if (arr_adj[i][j] != 0) {
-						list_adj[i].add(new ListNode(j + 1, arr_adj[i][j]));
+						list_adj[i].add(new ListNode(j, arr_adj[i][j]));
 					}
 				}
 			}
@@ -210,7 +262,7 @@ public class Graph {
 			clearGraph(States.ARR_ADJ);
 			for (int i = 0; i < N; i++) {
 				for (ListNode vertex : list_adj[i]) {
-					arr_adj[i][vertex.data - 1] = vertex.weight;
+					arr_adj[i][vertex.data] = vertex.weight;
 				}
 			}
 			break;
@@ -252,7 +304,7 @@ public class Graph {
 			break;
 		case LIST_ADJ:
 			for (int i = 0; i < N; i++) {
-				System.out.print((i + 1) + ": [ ");
+				System.out.print(i + ": [ ");
 				for (ListNode vertex : list_adj[i]) {
 					System.out.print(vertex.data);
 					if (Main.isShowWeight)

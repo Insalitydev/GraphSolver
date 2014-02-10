@@ -86,8 +86,6 @@ public class GraphParser {
 					continue;
 				}
 				int curIndex = Integer.parseInt(dataLine.split(":")[0].trim());
-				// minus 1 because arrays [0..]
-				curIndex -= 1;
 				// Some magic: создание массива из чисел второй части строки,
 				// преобразование её в коллекцию, добавление в данные графа
 				// Array String of adj. vertexs:

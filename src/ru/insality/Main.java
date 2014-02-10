@@ -20,7 +20,7 @@ public class Main {
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
 		Graph graph = null;
 		try {
-			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("treeGraph.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
@@ -38,11 +38,8 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.ARR_INC);
 			graph.printGraph();
-			graph.setState(States.LIST_ADJ);
-			graph.printGraph();
 			graph.bfs(0);
 			graph.dfs(0);
-			
 		}
 		
 	}
