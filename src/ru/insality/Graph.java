@@ -82,6 +82,30 @@ public class Graph {
 		clearNodes();
 	}
 
+	/** Return degree (count of adj. nodes) of some node */
+	public int getDegree(int node) {
+		assert(node < N);
+		
+		int result = 0;
+		switch (getState()) {
+		case ARR_ADJ:
+			for (int i = 0; i < N; i++){
+				if (arr_adj[node][i] != 0) 
+					result++;
+			}
+			break;
+		case ARR_INC:
+			for (int i = 0; i < M; i++)
+				if (arr_inc[node][i] > 0)
+					result++;
+			break;
+		case LIST_ADJ:
+			result = list_adj[node].size();
+			break;
+		}
+		return result;
+	}
+	
 	/** return true, if node1 and node2 is adjacency */
 	public boolean isAdjacency(int node1, int node2) {
 		assert(node1 < N);
@@ -113,63 +137,18 @@ public class Graph {
 		return false;
 	}
 
-	/** Return degree (count of adj. nodes) of some node */
-	public int getDegree(int node) {
-		assert(node < N);
-		
-		int result = 0;
-		switch (getState()) {
-		case ARR_ADJ:
-			for (int i = 0; i < N; i++){
-				if (arr_adj[node][i] != 0) 
-					result++;
-			}
-			break;
-		case ARR_INC:
-			for (int i = 0; i < M; i++)
-				if (arr_inc[node][i] > 0)
-					result++;
-			break;
-		case LIST_ADJ:
-			result = list_adj[node].size();
-			break;
-		}
-		return result;
-	}
-
 	/**
 	 * @return first unvisited (from isVisited[]) vertex child from vertex node.
 	 *         If have not vertex: return -1
 	 */
 	private int getUnvisitedChildNode(int node) {
+		// more simple logic, but in list_adj now more iterations to check
 		int result = -1;
-		switch (getState()) {
-		case ARR_ADJ:
-			for (int i = 0; i < N; i++)
-				if (arr_adj[node][i] != 0 && !isVisited[i]) {
-					return i;
-				}
-			break;
-		case ARR_INC:
-			for (int i = 0; i < M; i++)
-				if (arr_inc[node][i] != 0)
-					// Finding incid. vertex to our node
-					for (int j = 0; j < N; j++)
-						if (arr_inc[j][i] != 0 && !isVisited[j] && j != node) {
-							return j;
-						}
-			break;
-		case LIST_ADJ:
-			for (ListNode curNode : list_adj[node])
-				if (!isVisited[curNode.data]) {
-					return curNode.data;
-				}
-			break;
-		default:
-			Log.print(Log.error, "Error in switch, unexpected graph State");
-			break;
-		}
-
+		for (int i = 0; i < N; i++)
+			if (isAdjacency(node, i) && !isVisited[i]){
+				return i;
+			}
+		
 		return result;
 
 	}

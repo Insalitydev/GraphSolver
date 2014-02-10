@@ -33,11 +33,12 @@ public class Main {
 			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
 			graph.setState(States.LIST_ADJ);
-			graph.printGraph();
+			graph.bfs(0);
+			graph.dfs(0);
 			graph.setState(States.ARR_ADJ);
-			graph.printGraph();
+			graph.bfs(0);
+			graph.dfs(0);
 			graph.setState(States.ARR_INC);
-			graph.printGraph();
 			graph.bfs(0);
 			graph.dfs(0);
 		}
