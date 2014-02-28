@@ -13,6 +13,7 @@ import ru.insality.Graph.States;
  * */
 public class Main {
 	
+//	TODO: 
 	public static boolean isShowWeight = true;
 	
 	public static void main(String[] args) {
@@ -32,6 +33,16 @@ public class Main {
 			graph.printGraph();
 			graph.setState(States.ARR_ADJ);
 			graph.printGraph();
+			graph.setState(States.ARR_INC);
+			graph.printGraph();
+			graph.setState(States.ARR_ADJ);
+			graph.printGraph();
+			graph.setState(States.LIST_ADJ);
+			graph.printGraph();
+			graph.setState(States.ARR_INC);
+			graph.printGraph();
+			graph.setState(States.ARR_ADJ);
+			graph.printGraph();
 			System.out.println(graph.isAdjacency(0, 1));
 			System.out.println(graph.isAdjacency(1, 0));
 			System.out.println(graph.isAdjacency(1, 3));
@@ -39,9 +50,11 @@ public class Main {
 			System.out.println(graph.isAdjacency(2, 1));
 			graph.bfs(0);
 			graph.dfs(0);
-			graph.setState(States.ARR_ADJ);
-			graph.bfs(0);
-			graph.dfs(0);
+			System.out.println(graph.getDegree(0));
+			System.out.println(graph.getDegree(1));
+			System.out.println(graph.getDegree(2));
+			System.out.println(graph.getDegree(3));
+		
 		}
 		
 	}

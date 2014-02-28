@@ -84,19 +84,19 @@ public class Graph {
 
 	/** Return degree (count of adj. nodes) of some node */
 	public int getDegree(int node) {
-		assert(node < N);
-		
+		assert (node < N);
+
 		int result = 0;
 		switch (getState()) {
 		case ARR_ADJ:
-			for (int i = 0; i < N; i++){
-				if (arr_adj[node][i] != 0) 
+			for (int i = 0; i < N; i++) {
+				if (arr_adj[node][i] != 0)
 					result++;
 			}
 			break;
 		case ARR_INC:
 			for (int i = 0; i < M; i++)
-				if (arr_inc[node][i] > 0)
+				if (arr_inc[node][i] < 0)
 					result++;
 			break;
 		case LIST_ADJ:
@@ -105,12 +105,12 @@ public class Graph {
 		}
 		return result;
 	}
-	
-	/** return true, if node1 and node2 is adjacency */
+
+	/** return true, if node1 to node2 is adjacency */
 	public boolean isAdjacency(int node1, int node2) {
-		assert(node1 < N);
-		assert(node2 < N);
-		
+		assert (node1 < N);
+		assert (node2 < N);
+
 		switch (getState()) {
 		case ARR_ADJ:
 			if (arr_adj[node1][node2] != 0) {
@@ -119,15 +119,15 @@ public class Graph {
 			break;
 		case ARR_INC:
 			for (int i = 0; i < M; i++)
-				if (arr_inc[node1][i] != 0)
-					// Finding incid. vertex to our node
+				if (arr_inc[node1][i] < 0)
+					// Finding incid. vertex to our node (this are >0 value weight)
 					for (int j = 0; j < N; j++)
-						if (arr_inc[j][i] != 0 && j == node2) {
+						if (arr_inc[j][i] > 0 && j == node2) {
 							return true;
 						}
 			break;
 		case LIST_ADJ:
-			for (ListNode node: list_adj[node1]){
+			for (ListNode node : list_adj[node1]) {
 				if (node.data == node2)
 					return true;
 			}
@@ -145,10 +145,10 @@ public class Graph {
 		// more simple logic, but in list_adj now more iterations to check
 		int result = -1;
 		for (int i = 0; i < N; i++)
-			if (isAdjacency(node, i) && !isVisited[i]){
+			if (isAdjacency(node, i) && !isVisited[i]) {
 				return i;
 			}
-		
+
 		return result;
 
 	}
@@ -177,14 +177,24 @@ public class Graph {
 
 			int curEdge = 0;
 			for (int i = 0; i < N; i++) {
-				for (int j = i; j < N; j++) {
+				for (int j = 0; j < N; j++) {
 					if (arr_adj[i][j] != 0) {
-						arr_inc[i][curEdge] = arr_adj[i][j];
+						arr_inc[i][curEdge] = -arr_adj[i][j];
 						arr_inc[j][curEdge] = arr_adj[i][j];
 						curEdge++;
 					}
 				}
+
 			}
+			// for (int i = 0; i < N; i++) {
+			// for (int j = 0; j < i; j++) {
+			// if (arr_adj[i][j] != 0) {
+			// arr_inc[i][curEdge] = -arr_adj[i][j];
+			// arr_inc[j][curEdge] = arr_adj[i][j];
+			// curEdge++;
+			// }
+			// }
+			// }
 			assert (curEdge <= M);
 			break;
 		// ANYTHING -> ARR_ADJ
@@ -220,16 +230,22 @@ public class Graph {
 			clearGraph(States.ARR_ADJ);
 			for (int j = 0; j < M; j++) {
 				boolean isFirstFinded = false;
+				// First - отрицательное число, откуда ребро уходит, Second - положительное, туда ребро входит
 				int posFirst = 0;
+				int posSecond = 0;
 
 				for (int i = 0; i < N; i++) {
 					if (arr_inc[i][j] != 0) {
-						if (!isFirstFinded) {
-							isFirstFinded = true;
+						if (arr_inc[i][j] < 0)
 							posFirst = i;
+						else
+							posSecond = i;
+						
+						if (!isFirstFinded) {
+							isFirstFinded = true;	
 						} else {
-							arr_adj[posFirst][i] = arr_inc[i][j];
-							arr_adj[i][posFirst] = arr_inc[i][j];
+							arr_adj[posFirst][posSecond] = arr_inc[posSecond][j];
+//							arr_adj[i][posFirst] = arr_inc[i][j];
 							isFirstFinded = false;
 						}
 					}
@@ -268,7 +284,10 @@ public class Graph {
 		case ARR_INC:
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < M; j++) {
-					System.out.print(arr_inc[i][j] + " ");
+					if (arr_inc[i][j] >= 0)
+						System.out.print(" " + arr_inc[i][j] + " ");
+					else
+						System.out.print(arr_inc[i][j] + " ");
 				}
 				System.out.println();
 			}
@@ -318,7 +337,7 @@ public class Graph {
 		int edges = 0;
 		if (getState() == States.ARR_ADJ)
 			for (int i = 0; i < N; i++)
-				for (int j = i; j < N; j++)
+				for (int j = 0; j < N; j++)
 					if (arr_adj[i][j] != 0)
 						edges++;
 		this.M = edges;
