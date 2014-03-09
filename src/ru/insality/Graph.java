@@ -273,7 +273,12 @@ public class Graph {
 	public States getState() {
 		return state;
 	}
-
+	public int getEdgeCount(){
+		return this.M;		
+	}
+	public int getVertexCount(){
+		return this.N;
+	}
 	/** Выводит информацию о графе и сам граф на консоль */
 	public void printGraph() {
 		Log.print(Log.system, "Printing graph's data");

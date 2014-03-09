@@ -12,9 +12,8 @@ import ru.insality.Graph.States;
  * Присутствует ряд алгоритмов для работы нам графом 
  * */
 public class Main {
-	
 //	TODO: 
-	public static boolean isShowWeight = true;
+	public static boolean isShowWeight = false;
 	
 	public static void main(String[] args) {
 		Log.print(Log.system, "Hello, GraphSolver!");
@@ -29,31 +28,24 @@ public class Main {
 		
 		if (graph != null){
 			graph.printGraph();
-			graph.setState(States.LIST_ADJ);
-			graph.printGraph();
-			graph.setState(States.ARR_ADJ);
-			graph.printGraph();
-			graph.setState(States.ARR_INC);
-			graph.printGraph();
-			graph.setState(States.ARR_ADJ);
-			graph.printGraph();
-			graph.setState(States.LIST_ADJ);
-			graph.printGraph();
-			graph.setState(States.ARR_INC);
-			graph.printGraph();
-			graph.setState(States.ARR_ADJ);
-			graph.printGraph();
-			System.out.println(graph.isAdjacency(0, 1));
-			System.out.println(graph.isAdjacency(1, 0));
-			System.out.println(graph.isAdjacency(1, 3));
-			System.out.println(graph.isAdjacency(3, 1));
-			System.out.println(graph.isAdjacency(2, 1));
-			graph.bfs(0);
-			graph.dfs(0);
-			System.out.println(graph.getDegree(0));
-			System.out.println(graph.getDegree(1));
-			System.out.println(graph.getDegree(2));
-			System.out.println(graph.getDegree(3));
+//			graph.setState(States.LIST_ADJ);
+//			graph.printGraph();
+//			graph.setState(States.ARR_ADJ);
+//			graph.printGraph();
+//			graph.setState(States.ARR_INC);
+//			graph.printGraph();
+//			graph.setState(States.ARR_ADJ);
+//			graph.printGraph();
+//			graph.setState(States.LIST_ADJ);
+//			graph.printGraph();
+//			graph.setState(States.ARR_INC);
+//			graph.printGraph();
+//			graph.setState(States.ARR_ADJ);
+//			graph.printGraph();
+//			graph.bfs(0);
+//			graph.dfs(0);
+			
+			Graph primaGraph = GraphAlgorithm.Prima(graph);
 		
 		}
 		
