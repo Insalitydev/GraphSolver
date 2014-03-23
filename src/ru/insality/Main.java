@@ -46,6 +46,11 @@ public class Main {
 //			graph.dfs(0);
 			
 			Graph primaGraph = GraphAlgorithm.Prima(graph);
+			primaGraph.setState(States.LIST_ADJ);
+			primaGraph.setState(States.ARR_ADJ);
+			primaGraph.printGraph();
+			
+			System.out.println(GraphAlgorithm.Kruskal(graph));
 		
 		}
 		

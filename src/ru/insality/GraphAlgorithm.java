@@ -2,16 +2,19 @@ package ru.insality;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 import ru.insality.Graph.States;
 
 public class GraphAlgorithm {
 
-	/** Ищет остовное дерево, сумма ребер которого минимальна. O(N^2)*/
+	/** Ищет остовное дерево, сумма ребер которого минимальна. O(N^2) */
 	public static Graph Prima(Graph input) {
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Prima algorithm:");
-		
+
 		// init:
 		int N = input.getVertexCount();
 		int M = input.getEdgeCount();
@@ -45,14 +48,17 @@ public class GraphAlgorithm {
 					vMin = j;
 				}
 			}
-//			if (Dist[vMin] == 9_999_999) {
-//				Log.print(Log.error, "No MST!");
-//				return null;
-//			}
+			// if (Dist[vMin] == 9_999_999) {
+			// Log.print(Log.error, "No MST!");
+			// return null;
+			// }
 
 			inTree[vMin] = true;
 			if (Prev[vMin] != -1) {
 				System.out.println(vMin + "-" + Prev[vMin]);
+				// adding edge to graph data:
+				arr_adj[vMin - 1][Prev[vMin] - 1] = input.arr_adj[vMin - 1][Prev[vMin] - 1];
+				arr_adj[Prev[vMin] - 1][vMin - 1] = input.arr_adj[vMin - 1][Prev[vMin] - 1];
 			}
 
 			for (int to = 0; to < N; to++) {
@@ -65,4 +71,68 @@ public class GraphAlgorithm {
 
 		return new Graph(arr_inc, arr_adj, list_adj, States.ARR_ADJ, N, M);
 	}
+
+	public static int Kruskal(Graph input) {
+		input.setState(States.ARR_ADJ);
+		Log.print(Log.system, "Kruskal algorithm:");
+
+		// init:
+		int N = input.getVertexCount();
+		int M = input.getEdgeCount();
+		int[][] arr_inc = new int[N][M];
+		int[][] arr_adj = new int[N][N];
+		@SuppressWarnings("unchecked")
+		ArrayList<ListNode>[] list_adj = new ArrayList[N];
+
+		// init data:
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(arr_adj[i], 0);
+			Arrays.fill(arr_inc[i], 0);
+			list_adj[i] = new ArrayList<ListNode>();
+		}
+
+		// Kruskal init:
+		// For Krustal needed list of edges:
+		DSF dsf = new DSF(input.getVertexCount());
+		ArrayList<Edge> edges = input.getEdges();
+		Collections.sort(edges);
+		
+		int cost = 0;
+		for (Edge e: edges)
+			if (dsf.union(e.u, e.v)){
+				System.out.println("Kruskal: edge " + (e.u+1) + "-" + (e.v+1));
+				cost += e.w;
+			}
+		return cost;
+	}
+	
+	public static int Boruvka(Graph input) {
+		input.setState(States.ARR_ADJ);
+		Log.print(Log.system, "Boruvka algorithm:");
+
+		// init:
+		int N = input.getVertexCount();
+		int M = input.getEdgeCount();
+		int[][] arr_inc = new int[N][M];
+		int[][] arr_adj = new int[N][N];
+		@SuppressWarnings("unchecked")
+		ArrayList<ListNode>[] list_adj = new ArrayList[N];
+
+		// init data:
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(arr_adj[i], 0);
+			Arrays.fill(arr_inc[i], 0);
+			list_adj[i] = new ArrayList<ListNode>();
+		}
+
+		// Boruvka init:
+		ArrayList<Edge> edges = new ArrayList<>();
+
+		while (edges.size() < input.getVertexCount()){
+			//TODO:
+		}
+		return 0;
+	}
+
+	
 }

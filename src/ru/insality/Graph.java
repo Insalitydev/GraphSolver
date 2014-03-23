@@ -319,6 +319,21 @@ public class Graph {
 			break;
 		}
 	}
+	
+	/** Возвращает список ребер у графа*/
+	public ArrayList<Edge> getEdges(){
+		ArrayList<Edge> g = new ArrayList<Edge>();
+		setState(States.ARR_ADJ);
+		
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < N; j++){
+				if (arr_adj[i][j] != 0)
+					g.add(new Edge(i, j, arr_adj[i][j]));
+			}
+		}
+		
+		return g;
+	}
 
 	/** Выводит списки посещенных вершин */
 	public void printVisited() {
