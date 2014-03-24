@@ -51,7 +51,9 @@ public class Main {
 			primaGraph.printGraph();
 			
 			System.out.println(GraphAlgorithm.Kruskal(graph));
+			GraphAlgorithm.Boruvka(graph);
 		
+			Log.print(Log.system, "Program end");
 		}
 		
 	}

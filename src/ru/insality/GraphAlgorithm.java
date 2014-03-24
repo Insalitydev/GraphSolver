@@ -96,16 +96,17 @@ public class GraphAlgorithm {
 		DSF dsf = new DSF(input.getVertexCount());
 		ArrayList<Edge> edges = input.getEdges();
 		Collections.sort(edges);
-		
+
 		int cost = 0;
-		for (Edge e: edges)
-			if (dsf.union(e.u, e.v)){
-				System.out.println("Kruskal: edge " + (e.u+1) + "-" + (e.v+1));
+		for (Edge e : edges)
+			if (dsf.union(e.u, e.v)) {
+				System.out.println("Kruskal: edge " + (e.u + 1) + "-"
+						+ (e.v + 1));
 				cost += e.w;
 			}
 		return cost;
 	}
-	
+
 	public static int Boruvka(Graph input) {
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Boruvka algorithm:");
@@ -126,13 +127,31 @@ public class GraphAlgorithm {
 		}
 
 		// Boruvka init:
-		ArrayList<Edge> edges = new ArrayList<>();
+		ArrayList<Edge> edges = input.getEdges();
+		ArrayList<Edge> resultEdges = new ArrayList<>();
+		DSF dsf = new DSF(input.getVertexCount());
+		Edge[] min = new Edge[input.getVertexCount()];
 
-		while (edges.size() < input.getVertexCount()){
-			//TODO:
+		while (resultEdges.size() < input.getVertexCount()-1) {
+			Arrays.fill(min, new Edge(0, 0, 9_999_999));
+			for (Edge e : edges) {
+				if (dsf.set(e.u) != dsf.set((e.v))) {
+					if (e.w < min[e.u].w)
+						min[e.u] = e;
+				}
+			}
+			for (int i = 0; i < input.getVertexCount(); i++) {
+				if (min[i].w != 9_999_999) {
+					if (dsf.set(min[i].u) != dsf.set((min[i].v))) {
+						resultEdges.add(min[i]);
+						System.out.println("Boruvka: edge " + (min[i].u+1) + " "
+								+ (min[i].v+1));
+					}
+					dsf.union(min[i].u, min[i].v);
+				}
+			}
 		}
 		return 0;
 	}
 
-	
 }
