@@ -151,5 +151,67 @@ public class GraphAlgorithm {
 		}
 		return 0;
 	}
+	
+	/** Ищет эйлеров цикл в графе */
+	public static int Fleury(Graph input) {
+		input.setState(States.ARR_ADJ);
+		Log.print(Log.system, "Fleury algorithm:");
+
+		// init:
+		int N = input.getVertexCount();
+		int M = input.getEdgeCount();
+		int[][] arr_inc = new int[N][M];
+		int[][] arr_adj = new int[N][N];
+		@SuppressWarnings("unchecked")
+		ArrayList<ListNode>[] list_adj = new ArrayList[N];
+
+		// init data:
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(arr_adj[i], 0);
+			Arrays.fill(arr_inc[i], 0);
+			list_adj[i] = new ArrayList<ListNode>();
+		}
+		
+		// copy graph:
+		for (int i = 0; i < N; i++)
+				for (int j = 0; j < N; j++){
+					arr_adj[i][j] = input.arr_adj[i][j];
+				}
+		
+		Graph out = new Graph(arr_inc, arr_adj, list_adj, States.ARR_ADJ, N, M);
+		out.setState(States.ARR_ADJ);
+		
+		System.out.println("Steps count: <= "+ out.getEdgeCount());
+		//Fleury:
+		int curNode = 0;
+		int nextNode = 0;
+		for (int i = 0; i < out.getEdgeCount(); i++){
+			//Find the next node and del edge:
+			for (int j = 0; j < N; j++){
+				if (out.arr_adj[curNode][j] > 0 && out.getDegree(curNode) > 1){
+					nextNode = j;
+					out.arr_adj[curNode][j] = 0;
+					out.arr_adj[j][curNode] = 0;
+					break;
+				}
+				
+				if (out.arr_adj[curNode][j] > 0 && out.getDegree(curNode) == 1){
+					nextNode = j;
+					out.arr_adj[curNode][j] = 0;
+					out.arr_adj[j][curNode] = 0;
+					break;
+				}
+				
+			}
+			if (curNode == nextNode)
+				break;
+			System.out.println("Edge: " + (curNode+1) + " " + (nextNode+1));
+			curNode = nextNode;
+		
+		}
+	
+		return 0;
+		
+	}
 
 }

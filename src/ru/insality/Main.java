@@ -29,11 +29,11 @@ public class Main {
 		if (graph != null){
 			graph.printGraph();
 			
-			GraphAlgorithm.Prima(graph);
-			
-			System.out.println(GraphAlgorithm.Kruskal(graph));
-			GraphAlgorithm.Boruvka(graph);
-		
+//			GraphAlgorithm.Prima(graph);
+//			System.out.println(GraphAlgorithm.Kruskal(graph));
+//			GraphAlgorithm.Boruvka(graph);
+
+			GraphAlgorithm.Fleury(graph);
 			Log.print(Log.system, "Program end");
 		}
 		
