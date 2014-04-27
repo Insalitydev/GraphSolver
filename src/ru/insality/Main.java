@@ -28,27 +28,8 @@ public class Main {
 		
 		if (graph != null){
 			graph.printGraph();
-//			graph.setState(States.LIST_ADJ);
-//			graph.printGraph();
-//			graph.setState(States.ARR_ADJ);
-//			graph.printGraph();
-//			graph.setState(States.ARR_INC);
-//			graph.printGraph();
-//			graph.setState(States.ARR_ADJ);
-//			graph.printGraph();
-//			graph.setState(States.LIST_ADJ);
-//			graph.printGraph();
-//			graph.setState(States.ARR_INC);
-//			graph.printGraph();
-//			graph.setState(States.ARR_ADJ);
-//			graph.printGraph();
-//			graph.bfs(0);
-//			graph.dfs(0);
 			
-			Graph primaGraph = GraphAlgorithm.Prima(graph);
-			primaGraph.setState(States.LIST_ADJ);
-			primaGraph.setState(States.ARR_ADJ);
-			primaGraph.printGraph();
+			GraphAlgorithm.Prima(graph);
 			
 			System.out.println(GraphAlgorithm.Kruskal(graph));
 			GraphAlgorithm.Boruvka(graph);

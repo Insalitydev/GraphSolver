@@ -11,7 +11,7 @@ import ru.insality.Graph.States;
 public class GraphAlgorithm {
 
 	/** Ищет остовное дерево, сумма ребер которого минимальна. O(N^2) */
-	public static Graph Prima(Graph input) {
+	public static int Prima(Graph input) {
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Prima algorithm:");
 
@@ -31,45 +31,43 @@ public class GraphAlgorithm {
 		}
 
 		// prima init:
-		int[] Dist = new int[N];
-		int[] Prev = new int[N];
-		boolean[] inTree = new boolean[N];
-		Arrays.fill(Dist, 9_999_999);
-		Arrays.fill(Prev, -1);
-		Arrays.fill(inTree, false);
-		Dist[0] = 0;
-		inTree[0] = true;
-		Prev[0] = 0;
-
-		for (int i = 1; i < N; i++) {
-			int vMin = -1;
-			for (int j = 1; j < N; j++) {
-				if (!inTree[j] && (vMin == -1 || Dist[j] < Dist[vMin])) {
-					vMin = j;
-				}
-			}
-			// if (Dist[vMin] == 9_999_999) {
-			// Log.print(Log.error, "No MST!");
-			// return null;
-			// }
-
-			inTree[vMin] = true;
-			if (Prev[vMin] != -1) {
-				System.out.println(vMin + "-" + Prev[vMin]);
-				// adding edge to graph data:
-				arr_adj[vMin - 1][Prev[vMin] - 1] = input.arr_adj[vMin - 1][Prev[vMin] - 1];
-				arr_adj[Prev[vMin] - 1][vMin - 1] = input.arr_adj[vMin - 1][Prev[vMin] - 1];
-			}
-
-			for (int to = 0; to < N; to++) {
-				if (input.arr_adj[vMin][to] < Dist[to]) {
-					Dist[to] = input.arr_adj[vMin][to];
-					Prev[to] = vMin;
-				}
-			}
-		}
-
-		return new Graph(arr_inc, arr_adj, list_adj, States.ARR_ADJ, N, M);
+		int start = 0;
+	    int[] distance = new int[N];
+	    int index = 0, u;
+	    boolean[] visited = new boolean[N];
+	    int[] prev = new int[N];
+	 
+	    for (int i = 0; i < N; i++)
+	    {
+	        distance[i] = 9_999_999;
+	        prev[i] = 0;
+	        visited[i] = false;
+	    }
+	    distance[start] = 0;
+	    System.out.println("Минимальное остовное дерево:");
+	    for (int count = 0; count < N; count++)
+	    {
+	        double min = 9_999_999;
+	        for (int i = 0; i < N; i++)
+	            if (!visited[i] && distance[i]<=min)
+	            {
+	                min = distance[i];
+	                index = i;
+	            }
+	        u = index;
+	        visited[u] = true;
+	        for (int i = 0; i < N; i++)
+	            if (!visited[i] && (input.arr_adj[u][i]>0) && distance[u] < 9_999_999 &&
+	                input.arr_adj[u][i] < distance[i])
+	            {
+	                distance[i] = input.arr_adj[u][i];
+	                prev[i] = u;
+	            }
+	        if (prev[u] != u)
+	        	System.out.println("Prima: edge: " + (prev[u]+1) + " " + (u+1));
+	    }
+//		return new Graph(arr_inc, arr_adj, list_adj, States.ARR_ADJ, N, M);
+	    return 0;
 	}
 
 	public static int Kruskal(Graph input) {
