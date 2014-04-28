@@ -20,7 +20,7 @@ public class Main {
 		Log.print(Log.system, "Graph's presents: " + Arrays.toString(States.values()));
 		Graph graph = null;
 		try {
-			 graph = GraphParser.parseGraph(new File("testGraph.txt"));
+			 graph = GraphParser.parseGraph(new File("testGraph2.txt"));
 		} catch (FileNotFoundException e) {
 			Log.print(Log.error, "File " + e.toString() + "not found!");
 			e.printStackTrace();
@@ -32,8 +32,8 @@ public class Main {
 //			GraphAlgorithm.Prima(graph);
 //			System.out.println(GraphAlgorithm.Kruskal(graph));
 //			GraphAlgorithm.Boruvka(graph);
-
-			GraphAlgorithm.Fleury(graph);
+//			GraphAlgorithm.Fleury(graph);
+			GraphAlgorithm.Rhid(graph);
 			Log.print(Log.system, "Program end");
 		}
 		
