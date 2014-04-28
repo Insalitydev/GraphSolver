@@ -37,25 +37,29 @@ public class Graph {
 	}
 
 	/** Breadth-first search algorithm */
-	public void bfs(int from) {
-		Log.print(Log.system, "Start the BFS algorythm, starting from: " + from);
+	public boolean bfs(int from, int to) {
+		boolean result = false;
+		
+//		Log.print(Log.system, "Start the BFS algorythm, starting from: " + from);
 		clearNodes();
 
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(from);
-		System.out.print(from + " ");
+//		System.out.print(from + " ");
 		isVisited[from] = true;
 		while (!queue.isEmpty()) {
 			int node = queue.remove();
 			int child = -1;
 			while ((child = getUnvisitedChildNode(node)) != -1) {
 				isVisited[child] = true;
-				System.out.print(child + " ");
+//				System.out.print(child + " ");
 				queue.add(child);
 			}
 		}
-		System.out.println();
+//		System.out.println();
+		result = isVisited[to];
 		clearNodes();
+		return result;
 	}
 
 	/** Deep-first search algorithm */
@@ -105,7 +109,7 @@ public class Graph {
 		}
 		return result;
 	}
-
+	
 	/** return true, if node1 to node2 is adjacency */
 	public boolean isAdjacency(int node1, int node2) {
 		assert (node1 < N);

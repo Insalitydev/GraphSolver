@@ -168,10 +168,51 @@ public class GraphAlgorithm {
 		return 0;
 	}
 
+	/**
+	 * 0 - euler; 1 - half-euler; 2 - not euler
+	 */
+	private static int checkEuler(Graph graph) {
+		int count = 0;
+		for (int i = 0; i < graph.getVertexCount(); i++) {
+			if (graph.getDegree(i) % 2 == 1) {
+				count++;
+			}
+		}
+
+		
+		if (count == 0) {
+			Log.print(Log.system, "The graph is euler");
+			return 0;
+		}
+		if (count == 2) {
+			Log.print(Log.system, "The graph is half-euler");
+			return 1;
+		}
+		Log.print(Log.system, "The graph is not euler");
+		return 2;
+	}
+
 	/** Ищет эйлеров цикл в графе */
 	public static int Fleury(Graph input) {
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Fleury algorithm:");
+
+		int startNode = 0;
+		int isEuler = checkEuler(input);
+		
+		if (isEuler == 2) {
+			Log.print(Log.error, "The graph is incorrect for Fleury algorithm");
+			return -1;
+		}
+		
+		if (isEuler == 1){
+			for (int i = 0; i < input.getVertexCount(); i++){
+				if (input.getDegree(i) % 2 == 1){
+					startNode = i;
+					break;
+				}
+			}
+		}
 
 		Graph out = getClearGraph(input.getVertexCount(), input.getEdgeCount());
 		// copy graph:
@@ -184,25 +225,34 @@ public class GraphAlgorithm {
 
 		System.out.println("Steps count: <= " + out.getEdgeCount());
 		// Fleury:
-		int curNode = 0;
+		int curNode = startNode;
 		int nextNode = 0;
 		for (int i = 0; i < out.getEdgeCount(); i++) {
 			// Find the next node and del edge:
 			for (int j = 0; j < out.getVertexCount(); j++) {
-				if (out.arr_adj[curNode][j] > 0 && out.getDegree(curNode) > 1) {
+				
+				int tmp1 = input.arr_adj[curNode][j];
+				int tmp2 = input.arr_adj[j][curNode];
+				input.arr_adj[curNode][j] = 0;
+				input.arr_adj[j][curNode] = 0;
+				boolean isBridge = !input.bfs(curNode, j);
+				input.arr_adj[curNode][j] = tmp1;
+				input.arr_adj[j][curNode] = tmp2;
+//				System.out.println((curNode+1) + " " + (j+1) + " " + isBridge);
+				
+				if (out.arr_adj[curNode][j] > 0 && !isBridge) {
 					nextNode = j;
 					out.arr_adj[curNode][j] = 0;
 					out.arr_adj[j][curNode] = 0;
 					break;
 				}
 
-				if (out.arr_adj[curNode][j] > 0 && out.getDegree(curNode) == 1) {
+				if (out.arr_adj[curNode][j] > 0 && isBridge && out.getDegree(curNode)==1) {
 					nextNode = j;
 					out.arr_adj[curNode][j] = 0;
 					out.arr_adj[j][curNode] = 0;
 					break;
 				}
-
 			}
 			if (curNode == nextNode)
 				break;
@@ -214,8 +264,25 @@ public class GraphAlgorithm {
 		return 0;
 	}
 
-	/** Алгоритм рид */
+	/** Алгоритм Рида */
 	public static int Rhid(Graph input) {
+
+		int startNode = 0;
+		
+		int isEuler = checkEuler(input);
+		if (isEuler == 2) {
+			Log.print(Log.error, "The graph is incorrect for Rid algorithm");
+			return -1;
+		}
+		
+		if (isEuler == 1){
+			for (int i = 0; i < input.getVertexCount(); i++){
+				if (input.getDegree(i) % 2 == 1){
+					startNode = i;
+					break;
+				}
+			}
+		}
 
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Rhid algorithm");
@@ -228,7 +295,7 @@ public class GraphAlgorithm {
 				out.arr_adj[i][j] = input.arr_adj[i][j];
 			}
 
-		int curNode = 0;
+		int curNode = startNode;
 		int nextNode = 0;
 		Stack<Integer> head = new Stack<Integer>();
 		head.push(curNode);
@@ -248,16 +315,19 @@ public class GraphAlgorithm {
 					}
 				}
 			}
+
 			
-			while (!head.isEmpty() && out.getDegree(head.peek()) == 0){
+			while (!head.isEmpty() && out.getDegree(head.peek()) == 0) {
 				tail.push(head.pop());
 			}
 		}
+
 		System.out.println("Rhid way:");
-		while (!tail.isEmpty()){
-			System.out.print((tail.pop()+1) + " ");
+		while (!tail.isEmpty()) {
+			System.out.print((tail.pop() + 1) + " ");
 		}
 		System.out.println();
+
 		return 0;
 	}
 }
