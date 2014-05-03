@@ -179,7 +179,6 @@ public class GraphAlgorithm {
 			}
 		}
 
-		
 		if (count == 0) {
 			Log.print(Log.system, "The graph is euler");
 			return 0;
@@ -199,15 +198,15 @@ public class GraphAlgorithm {
 
 		int startNode = 0;
 		int isEuler = checkEuler(input);
-		
+
 		if (isEuler == 2) {
 			Log.print(Log.error, "The graph is incorrect for Fleury algorithm");
 			return -1;
 		}
-		
-		if (isEuler == 1){
-			for (int i = 0; i < input.getVertexCount(); i++){
-				if (input.getDegree(i) % 2 == 1){
+
+		if (isEuler == 1) {
+			for (int i = 0; i < input.getVertexCount(); i++) {
+				if (input.getDegree(i) % 2 == 1) {
 					startNode = i;
 					break;
 				}
@@ -230,7 +229,7 @@ public class GraphAlgorithm {
 		for (int i = 0; i < out.getEdgeCount(); i++) {
 			// Find the next node and del edge:
 			for (int j = 0; j < out.getVertexCount(); j++) {
-				
+
 				int tmp1 = input.arr_adj[curNode][j];
 				int tmp2 = input.arr_adj[j][curNode];
 				input.arr_adj[curNode][j] = 0;
@@ -238,8 +237,9 @@ public class GraphAlgorithm {
 				boolean isBridge = !input.bfs(curNode, j);
 				input.arr_adj[curNode][j] = tmp1;
 				input.arr_adj[j][curNode] = tmp2;
-//				System.out.println((curNode+1) + " " + (j+1) + " " + isBridge);
-				
+				// System.out.println((curNode+1) + " " + (j+1) + " " +
+				// isBridge);
+
 				if (out.arr_adj[curNode][j] > 0 && !isBridge) {
 					nextNode = j;
 					out.arr_adj[curNode][j] = 0;
@@ -247,7 +247,8 @@ public class GraphAlgorithm {
 					break;
 				}
 
-				if (out.arr_adj[curNode][j] > 0 && isBridge && out.getDegree(curNode)==1) {
+				if (out.arr_adj[curNode][j] > 0 && isBridge
+						&& out.getDegree(curNode) == 1) {
 					nextNode = j;
 					out.arr_adj[curNode][j] = 0;
 					out.arr_adj[j][curNode] = 0;
@@ -268,16 +269,16 @@ public class GraphAlgorithm {
 	public static int Rhid(Graph input) {
 
 		int startNode = 0;
-		
+
 		int isEuler = checkEuler(input);
 		if (isEuler == 2) {
 			Log.print(Log.error, "The graph is incorrect for Rid algorithm");
 			return -1;
 		}
-		
-		if (isEuler == 1){
-			for (int i = 0; i < input.getVertexCount(); i++){
-				if (input.getDegree(i) % 2 == 1){
+
+		if (isEuler == 1) {
+			for (int i = 0; i < input.getVertexCount(); i++) {
+				if (input.getDegree(i) % 2 == 1) {
 					startNode = i;
 					break;
 				}
@@ -316,7 +317,6 @@ public class GraphAlgorithm {
 				}
 			}
 
-			
 			while (!head.isEmpty() && out.getDegree(head.peek()) == 0) {
 				tail.push(head.pop());
 			}
@@ -330,4 +330,54 @@ public class GraphAlgorithm {
 
 		return 0;
 	}
+
+	// -=-=-==-=-kuhn ...
+	static int n;
+	static int k;
+	static boolean[] used;
+	static int[] mt;
+
+	private static boolean tryKuhn(Graph input, int v) {
+		if (used[v])
+			return false;
+		used[v] = true;
+
+		for (int i = 0; i < input.getVertexCount(); i++) {
+			if (input.arr_adj[v][i] == 0)
+				continue;
+			int to = i;
+			if (mt[to] == -1 || tryKuhn(input, mt[to])) {
+				mt[to] = v;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void Kuhn(Graph input) {
+		input.setState(States.ARR_ADJ);
+		Log.print(Log.system, "Kuhn algorithm:");
+
+		// init
+		int n = input.getNodeCountFirstPartite();
+		int k = input.getVertexCount() - n;
+		mt = new int[k];
+		used = new boolean[n];
+		Arrays.fill(mt, -1);
+
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(used, false);
+			tryKuhn(input, i);
+		}
+
+		for (int i = 0; i < k; i++)
+			if (mt[i] != -1)
+				System.out.println((mt[i] + 1) + " " + (i + 1));
+	}
+
+	public static void Edmonds(Graph input) {
+		input.setState(States.ARR_ADJ);
+		Log.print(Log.system, "Edmonds algorithm:");
+	}
+
 }

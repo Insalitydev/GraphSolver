@@ -23,6 +23,7 @@ public class Graph {
 
 	private States state;
 	private int N, M;
+	private int nodeCountFirstPartite = 0;
 
 	/** Создает граф по всем параметрам. Достаются из GraphParser */
 	public Graph(int[][] arr_inc, int[][] arr_adj,
@@ -39,24 +40,25 @@ public class Graph {
 	/** Breadth-first search algorithm */
 	public boolean bfs(int from, int to) {
 		boolean result = false;
-		
-//		Log.print(Log.system, "Start the BFS algorythm, starting from: " + from);
+
+		// Log.print(Log.system, "Start the BFS algorythm, starting from: " +
+		// from);
 		clearNodes();
 
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(from);
-//		System.out.print(from + " ");
+		// System.out.print(from + " ");
 		isVisited[from] = true;
 		while (!queue.isEmpty()) {
 			int node = queue.remove();
 			int child = -1;
 			while ((child = getUnvisitedChildNode(node)) != -1) {
 				isVisited[child] = true;
-//				System.out.print(child + " ");
+				// System.out.print(child + " ");
 				queue.add(child);
 			}
 		}
-//		System.out.println();
+		// System.out.println();
 		result = isVisited[to];
 		clearNodes();
 		return result;
@@ -109,7 +111,7 @@ public class Graph {
 		}
 		return result;
 	}
-	
+
 	/** return true, if node1 to node2 is adjacency */
 	public boolean isAdjacency(int node1, int node2) {
 		assert (node1 < N);
@@ -124,7 +126,8 @@ public class Graph {
 		case ARR_INC:
 			for (int i = 0; i < M; i++)
 				if (arr_inc[node1][i] < 0)
-					// Finding incid. vertex to our node (this are >0 value weight)
+					// Finding incid. vertex to our node (this are >0 value
+					// weight)
 					for (int j = 0; j < N; j++)
 						if (arr_inc[j][i] > 0 && j == node2) {
 							return true;
@@ -234,7 +237,8 @@ public class Graph {
 			clearGraph(States.ARR_ADJ);
 			for (int j = 0; j < M; j++) {
 				boolean isFirstFinded = false;
-				// First - отрицательное число, откуда ребро уходит, Second - положительное, туда ребро входит
+				// First - отрицательное число, откуда ребро уходит, Second -
+				// положительное, туда ребро входит
 				int posFirst = 0;
 				int posSecond = 0;
 
@@ -244,12 +248,12 @@ public class Graph {
 							posFirst = i;
 						else
 							posSecond = i;
-						
+
 						if (!isFirstFinded) {
-							isFirstFinded = true;	
+							isFirstFinded = true;
 						} else {
 							arr_adj[posFirst][posSecond] = arr_inc[posSecond][j];
-//							arr_adj[i][posFirst] = arr_inc[i][j];
+							// arr_adj[i][posFirst] = arr_inc[i][j];
 							isFirstFinded = false;
 						}
 					}
@@ -277,12 +281,61 @@ public class Graph {
 	public States getState() {
 		return state;
 	}
-	public int getEdgeCount(){
-		return this.M;		
+
+	public int getEdgeCount() {
+		return this.M;
 	}
-	public int getVertexCount(){
+
+	public int getVertexCount() {
 		return this.N;
 	}
+	
+	public int getNodeCountFirstPartite(){
+		return nodeCountFirstPartite;
+	}
+
+	public boolean isBipartite() {
+
+		this.setState(States.ARR_ADJ);
+		boolean result = true;
+		int[] part = new int[this.getVertexCount()];
+		Arrays.fill(part, -1);
+
+		int fromNode = 0;
+		part[fromNode] = 1;
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.add(fromNode);
+		
+		while (!queue.isEmpty()){
+			int u = queue.poll();
+			for (int v = 0; v < this.getVertexCount(); v++){
+				if (this.arr_adj[u][v] != 0 && part[v] == -1){
+					part[v] = 1 - part[u];
+					queue.add(v);
+				}
+				
+				else if (this.arr_adj[u][v]!= 0 && part[v] == part[u]){
+					result = false;
+				}
+			}
+		}
+		
+		if (result)
+			Log.print(Log.system, "The graph is bipartite");
+		else
+			Log.print(Log.system, "The graph is not bipartite");
+		
+		//have to count how many nodes in first partite
+		int count = 0;
+		for (int i = 0; i < this.getVertexCount(); i++){
+			if (part[i]>0)
+				count++;
+		}
+		this.nodeCountFirstPartite = count; 
+		
+		return result;
+	}
+
 	/** Выводит информацию о графе и сам граф на консоль */
 	public void printGraph() {
 		Log.print(Log.system, "Printing graph's data");
@@ -323,19 +376,19 @@ public class Graph {
 			break;
 		}
 	}
-	
-	/** Возвращает список ребер у графа*/
-	public ArrayList<Edge> getEdges(){
+
+	/** Возвращает список ребер у графа */
+	public ArrayList<Edge> getEdges() {
 		ArrayList<Edge> g = new ArrayList<Edge>();
 		setState(States.ARR_ADJ);
-		
-		for (int i = 0; i < N; i++){
-			for (int j = 0; j < N; j++){
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
 				if (arr_adj[i][j] != 0)
 					g.add(new Edge(i, j, arr_adj[i][j]));
 			}
 		}
-		
+
 		return g;
 	}
 
@@ -354,8 +407,8 @@ public class Graph {
 	}
 
 	/**
-	 * Считает кол-во ребер и записывает их в поле M. Работает только в
-	 * режиме ARR_ADJ
+	 * Считает кол-во ребер и записывает их в поле M. Работает только в режиме
+	 * ARR_ADJ
 	 */
 	private void countEdges() {
 		int edges = 0;
