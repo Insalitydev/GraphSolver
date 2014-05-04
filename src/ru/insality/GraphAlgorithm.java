@@ -375,9 +375,113 @@ public class GraphAlgorithm {
 				System.out.println((mt[i] + 1) + " " + (i + 1));
 	}
 
+	// -=-=-=-=-=--==- Edmonds...
+
+	static boolean[] blossom;
+	static int[] p;
+	static int[] q;
+	static int[] base;
+	
+	private static int lca(int a, int b){
+		boolean[] used = new boolean[n];
+		for (;;){
+			a = base[a];
+			used[a] = true;
+			if (mt[a] == -1) break;
+			a = p[mt[a]];
+		}
+		// from b node
+		for (;;){
+			b = base[b];
+			if (used[b]) return b;
+			b = p[mt[b]];
+		}
+	}
+	
+	private static void markPath(int v, int b, int children){
+		while (base[v] != b){
+			blossom[base[v]] = blossom[base[mt[v]]] = true;
+			p[v] = children;
+			children = mt[v];
+			v = p[mt[v]];
+		}
+	}
+
+	private static int findPath(Graph input, int root) {
+		Arrays.fill(p, -1);
+		Arrays.fill(used, false);
+		for (int i = 0; i < n; ++i)
+			base[i] = i;
+
+		used[root] = true;
+		int qh = 0, qt = 0;
+		q[qt++] = root;
+
+		while (qh < qt) {
+			int v = q[qh++];
+			for (int i = 0; i < input.getVertexCount(); i++) {
+				if (input.arr_adj[v][i] == 0)
+					continue;
+
+				int to = i;
+				if (base[v] == base[to] || mt[v] == to)
+					continue;
+				if (to == root || mt[to] != -1 && p[mt[to]] != -1) {
+					int curBase = lca(v, to);
+					Arrays.fill(blossom, false);
+					markPath(v, curBase, to);
+					markPath(to, curBase, v);
+					for (int j = 0; j < n; j++) {
+						if (blossom[base[i]]) {
+							base[i] = curBase;
+							if (!used[i]) {
+								used[i] = true;
+								q[qt++] = i;
+							}
+						}
+					}
+				} else if (p[to] == -1) {
+					p[to] = v;
+					if (mt[to] == -1)
+						return to;
+					to = mt[to];
+					used[to] = true;
+					q[qt++] = to;
+				}
+			}
+		}
+		return -1;
+	}
+
 	public static void Edmonds(Graph input) {
 		input.setState(States.ARR_ADJ);
 		Log.print(Log.system, "Edmonds algorithm:");
+		// init...
+		n = input.getVertexCount();
+		used = new boolean[n];
+		blossom = new boolean[n];
+		mt = new int[n];
+		p = new int[n];
+		q = new int[n];
+		base = new int[n];
+		Arrays.fill(mt, -1);
+
+		for (int i = 0; i < n; i++) {
+			if (mt[i] == -1) {
+				int v = findPath(input, i);
+				while (v != -1) {
+					int pv = p[v];
+					int ppv = mt[pv];
+					mt[v] = pv;
+					mt[pv] = v;
+					v = ppv;
+				}
+			}
+		}
+
+		for (int i = 0; i < n; i++)
+		if (mt[i] != -1)
+			System.out.println((mt[i] + 1) + " " + (i + 1));
 	}
 
 }
