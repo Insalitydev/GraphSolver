@@ -381,25 +381,27 @@ public class GraphAlgorithm {
 	static int[] p;
 	static int[] q;
 	static int[] base;
-	
-	private static int lca(int a, int b){
+
+	private static int lca(int a, int b) {
 		boolean[] used = new boolean[n];
-		for (;;){
+		for (;;) {
 			a = base[a];
 			used[a] = true;
-			if (mt[a] == -1) break;
+			if (mt[a] == -1)
+				break;
 			a = p[mt[a]];
 		}
 		// from b node
-		for (;;){
+		for (;;) {
 			b = base[b];
-			if (used[b]) return b;
+			if (used[b])
+				return b;
 			b = p[mt[b]];
 		}
 	}
-	
-	private static void markPath(int v, int b, int children){
-		while (base[v] != b){
+
+	private static void markPath(int v, int b, int children) {
+		while (base[v] != b) {
 			blossom[base[v]] = blossom[base[mt[v]]] = true;
 			p[v] = children;
 			children = mt[v];
@@ -480,8 +482,9 @@ public class GraphAlgorithm {
 		}
 
 		for (int i = 0; i < n; i++)
-		if (mt[i] != -1)
-			System.out.println((mt[i] + 1) + " " + (i + 1));
+			if (mt[i] != -1)
+				if (mt[i] > i)
+					System.out.println((mt[i] + 1) + " " + (i + 1));
 	}
 
 }
